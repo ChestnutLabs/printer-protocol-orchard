@@ -1,0 +1,10 @@
+{
+  "type": "fan",
+  "action": "report",
+  "msgid": "00000000-0000-4000-8000-000000000030",
+  "timestamp": 1780000000300,
+  "data": {
+    "fan_speed_pct": 80,
+    "taskid": "T-FAKE"
+  }
+}

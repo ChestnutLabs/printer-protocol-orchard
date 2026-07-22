@@ -1,0 +1,62 @@
+{
+  "_meta": {
+    "schema_kind": "field-map",
+    "title": "Duet / RepRapFirmware — tools[] toolchanger model + active-tool + heater deref",
+    "vendor": "duet3d",
+    "family": "RepRapFirmware 3.0+ (Object Model `tools[]` / `state` / `heat`)",
+    "confidence": "🟡 source-read (Object-Model docs + LGPL @duet3d/objectmodel); toolchange-status live behaviour ⚪ needs an E3D ToolChanger/Jubilee owner-report",
+    "derived_from": {
+      "paper": "../../protocols/duet.md",
+      "section": "Multi-tool / toolchanger (not a feeder)",
+      "source_note": "Clean-room from Duet3D Object-Model docs. RRF is a toolchanger LEADER — tools[] is a first-class array, a far cleaner source than scraping a status object."
+    },
+    "facts_only": true,
+    "sanitized": true,
+    "notes": [
+      "RRF has NO per-slot MMU/feeder model — multi-tool is a TOOLHEAD concept, orthogonal to a feeder. Report no multi-material for core RRF; never fabricate slots. See ../../patterns/multi-material-feeders.md.",
+      "There is NO tools[n].filament field — the only filament signal is a NAME on the extruder (move.extruders[i].filament), resolved for a tool via tools[n].filamentExtruder (an extruder index).",
+      "Detect a toolchanger by PRESENCE (tools[].length > 1 with independent offsets/heaters), never a vendor string.",
+      "Heaters and bed/chamber are behind an INDEX dereference — resolve indices first (bed is not always heater 0)."
+    ]
+  },
+
+  "tool": {
+    "field": "tools[n]",
+    "fields": {
+      "number": "int — the T<number>",
+      "name": "string | null",
+      "state": "enum: active | standby | off",
+      "active": "float[] — already-resolved active setpoints (°C); use directly",
+      "standby": "float[] — already-resolved standby setpoints (°C)",
+      "heaters": "int[] — indices into heat.heaters[]; heat.heaters[heaters[0]].current = primary hotend temp",
+      "offsets": "float[] — per-axis offset ordered X, Y, Z, ...",
+      "extruders": "int[] — indices into move.extruders[]",
+      "filamentExtruder": "int — the extruder index whose .filament NAME applies to this tool",
+      "spindle": "int | -1 — maps a tool to a CNC spindle (out of FFF scope)"
+    }
+  },
+
+  "active_tool": {
+    "field": "state.currentTool",
+    "type": "int",
+    "none_sentinel": -1,
+    "note": "authoritative — do NOT scan per-tool state; fold -1 to 'none'",
+    "related": { "state.nextTool": "incoming tool during a change", "state.previousTool": "outgoing tool during a change" }
+  },
+
+  "toolchange_status": {
+    "field": "state.status",
+    "value": "changingTool",
+    "note": "first-class machine-level 'mid tool-change' signal (see state-status-enum.json)"
+  },
+
+  "heater_deref": {
+    "comment": "temps are °C but roles are indices into heat.heaters[]",
+    "heater_fields": { "current": "°C", "active": "setpoint °C", "standby": "setpoint °C", "state": "off | standby | active | fault | tuning | offline", "min": "°C", "max": "°C" },
+    "bed": "heat.bedHeaters[] = indices into heat.heaters[] (-1 = none)",
+    "chamber": "heat.chamberHeaters[] = indices into heat.heaters[] (-1 = none)",
+    "safety": "a heater.state == 'fault' is a real safety signal worth surfacing"
+  },
+
+  "macros_note": "A T<n> triggers RRF's user-authored tfree<n>.g / tpre<n>.g / tpost<n>.g macros on SD; a client only issues T<n> (or `T<n> P0` to suppress them) — it does not author them."
+}

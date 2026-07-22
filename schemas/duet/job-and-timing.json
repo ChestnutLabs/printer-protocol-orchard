@@ -1,0 +1,65 @@
+{
+  "_meta": {
+    "schema_kind": "field-map",
+    "title": "Duet / RepRapFirmware — job progress, time estimators & unit ledger",
+    "vendor": "duet3d",
+    "family": "RepRapFirmware 3.0+ (Object Model `job` subtree)",
+    "confidence": "🟡 source-read (docs.duet3d.com Object-Model reference; no bench)",
+    "derived_from": {
+      "paper": "../../protocols/duet.md",
+      "section": "Reading state — Progress & timing",
+      "source_note": "Clean-room from the Duet3D Object-Model docs. Field names are uncopyrightable facts."
+    },
+    "facts_only": true,
+    "sanitized": true,
+    "notes": [
+      "⚠️ RRF exposes NO single 'percent complete' field — derive it. And progress is FILE-BYTE position, not time, so ETA-from-progress is systematically wrong near the end — use job.timesLeft.* instead.",
+      "Everything time-valued in RRF is SECONDS; lengths are mm; sizes are bytes; fan/PWM is a 0..1 fraction. RRF needs no minutes/ms normalization — progress is the only DERIVED quantity.",
+      "See ../../patterns/timing-normalization.md."
+    ]
+  },
+
+  "progress": {
+    "comment": "derive; there is no fractionPrinted field",
+    "formula": "job.filePosition / job.file.size",
+    "unit": "file-byte fraction 0..1 (⚠️ NOT a time fraction)",
+    "guards": ["null file", "zero size"],
+    "eta_from_progress": "unreliable near end (file-byte) — prefer timesLeft.*"
+  },
+
+  "times_left": {
+    "field": "job.timesLeft",
+    "unit": "SECONDS",
+    "keys": {
+      "file": "estimate from file position",
+      "filament": "estimate from filament used",
+      "slicer": "the slicer's own estimate (needs RRF 3.5+)",
+      "toPause": "seconds until the next pause"
+    },
+    "precedence": ["slicer", "filament", "file"],
+    "no_layer_key": true
+  },
+
+  "durations_seconds": {
+    "comment": "all SECONDS",
+    "fields": ["job.duration", "job.warmUpDuration", "job.pauseDuration", "job.layerTime", "job.file.printTime", "job.file.simulatedTime", "state.upTime"]
+  },
+
+  "file_metadata": {
+    "field": "job.file",
+    "fields": { "fileName": "string (path; confirms the launched job)", "size": "bytes", "printTime": "seconds (slicer estimate)", "simulatedTime": "seconds (from a prior simulation)", "filament": "mm per extruder (array)", "numLayers": "int", "thumbnails": "base64 chunked (loop while `next` offset != 0)" }
+  },
+
+  "unit_ledger": {
+    "time": "seconds",
+    "length": "mm",
+    "file_size": "bytes",
+    "fan_pwm": "0..1 fraction",
+    "temperature": "degrees C"
+  },
+
+  "reboot_detection": {
+    "comment": "re-seed the full model and re-handshake when the board reboots",
+    "rule": "state.upTime (seconds) DECREASES between polls -> board rebooted"
+  }
+}

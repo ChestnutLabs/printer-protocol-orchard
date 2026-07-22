@@ -1,0 +1,43 @@
+# Printer Protocol Orchard — CI guardrail.
+#
+# This repository is a PUBLIC, clean-room, facts-only reference (MIT + CC BY 4.0).
+# Its value depends entirely on staying publishable: no copied vendor code, no
+# credential material, no un-sanitized network detail, and machine-readable
+# artifacts that actually parse. This workflow runs the three pure-stdlib
+# verification scripts on every push and pull request as a merge gate:
+#
+#   1. validate_schemas.py — every schemas/ + fixtures/ JSON parses, and each
+#      schema carries a facts_only + sanitized _meta block.
+#   2. check_links.py      — local Markdown cross-references resolve on disk.
+#   3. cleanroom_scan.py   — no secrets, cert/key files, leaked credential values,
+#      or un-sanitized private IPs (enforces CLEANROOM-CHECKLIST.md).
+#
+# No third-party pip installs: the scripts use only the Python standard library,
+# so the job stays fast, hermetic, and supply-chain-free.
+
+name: verify
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate schemas and fixtures
+        run: python scripts/validate_schemas.py
+
+      - name: Check local Markdown links
+        run: python scripts/check_links.py
+
+      - name: Clean-room / secret scan
+        run: python scripts/cleanroom_scan.py

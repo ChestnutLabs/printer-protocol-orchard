@@ -1,0 +1,16 @@
+{
+  "type": "print",
+  "action": "report",
+  "msgid": "00000000-0000-4000-8000-000000000050",
+  "timestamp": 1780000000500,
+  "data": {
+    "filename": "benchy.gcode",
+    "taskid": "T-FAKE",
+    "progress": 18,
+    "curr_layer": 8,
+    "total_layers": 51,
+    "print_time": 1,
+    "remain_time": 7,
+    "supplies_usage": 666
+  }
+}

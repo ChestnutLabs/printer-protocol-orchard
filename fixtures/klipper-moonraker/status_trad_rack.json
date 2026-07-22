@@ -1,0 +1,16 @@
+{
+  "type": "status",
+  "action": "update",
+  "msgid": "00000000-0000-0000-0000-000000000004",
+  "timestamp": 1751400003000,
+  "data": {
+    "trad_rack": {
+      "curr_lane": 0,
+      "active_lane": 1,
+      "next_lane": -1,
+      "next_tool": -1,
+      "tool_map": [0, 1, 2],
+      "selector_homed": true
+    }
+  }
+}

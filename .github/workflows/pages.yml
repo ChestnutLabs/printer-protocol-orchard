@@ -1,0 +1,62 @@
+name: Deploy docs to GitHub Pages
+
+# Builds the MkDocs (Material) site and publishes it to GitHub Pages.
+#
+# One-time setup: enable Pages for this repository under
+#   Settings > Pages > Build and deployment > Source: GitHub Actions
+# Without that, the deploy step has nowhere to publish.
+
+on:
+  push:
+    branches: [main]
+  # Allow manual runs from the Actions tab.
+  workflow_dispatch:
+
+# Least-privilege token, plus the OIDC token the deploy-pages action needs.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Serialize deployments; never cancel an in-progress publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install docs dependencies
+        run: pip install -r requirements-docs.txt
+
+      - name: Build site
+        # Build into an absolute temp dir OUTSIDE docs_dir (which is the repo root here);
+        # -d overrides site_dir so MkDocs never tries to nest the build inside its own source.
+        # Not --strict: the papers intentionally link to excluded .json fixtures/schemas, which
+        # strict mode treats as fatal — relative-link integrity is gated by check_links.py in ci.yml.
+        run: mkdocs build -d "${{ runner.temp }}/site"
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

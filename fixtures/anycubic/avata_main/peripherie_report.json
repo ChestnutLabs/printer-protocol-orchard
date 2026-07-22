@@ -1,0 +1,14 @@
+{
+  "type": "peripherie",
+  "action": "report",
+  "msgid": "00000000-0000-4000-8000-000000000060",
+  "timestamp": 1780000000600,
+  "data": {
+    "camera": 1,
+    "mount_path": "/mnt/usb",
+    "multiColorBox": 1,
+    "ret_code": 0,
+    "udisk": 0,
+    "usb_path": ""
+  }
+}

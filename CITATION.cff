@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use the Printer Protocol Orchard in your work, please cite it as below."
+title: "The Printer Protocol Orchard"
+abstract: >-
+  A public, clean-room, vendor-neutral reference documenting the LAN control
+  protocols of consumer 3D printers: ports, message shapes, field names, command
+  verbs, discovery and connection flows, described from vendors' own open-source
+  slicers and community research for interoperability with hardware the reader
+  owns.
+type: dataset
+authors:
+  - name: "Chestnut Labs"
+repository-code: "https://github.com/ChestnutLabs/printer-protocol-orchard"
+url: "https://github.com/ChestnutLabs/printer-protocol-orchard"
+license: MIT
+keywords:
+  - 3d-printing
+  - protocols
+  - interoperability
+  - klipper
+  - moonraker
+  - reprapfirmware
+  - mqtt
+  - clean-room
+version: "0.1.0"
+date-released: "2026-07-22"

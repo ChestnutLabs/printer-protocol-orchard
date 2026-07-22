@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Contributing guide
+    url: https://github.com/ChestnutLabs/printer-protocol-orchard/blob/main/CONTRIBUTING.md
+    about: How to contribute, and the clean-room rules every paper must pass before it goes public.
+  - name: Discussions — open questions
+    url: https://github.com/ChestnutLabs/printer-protocol-orchard/discussions
+    about: Ask an open-ended protocol question or float an idea that isn't yet a validation report, new-printer proposal, or correction.

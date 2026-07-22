@@ -1,0 +1,39 @@
+{
+  "type": "status",
+  "action": "update",
+  "msgid": "00000000-0000-0000-0000-000000000005",
+  "timestamp": 1751400004000,
+  "data": {
+    "toolchanger": {
+      "status": "ready",
+      "tool": "T1",
+      "tool_number": 1,
+      "detected_tool": "T1",
+      "detected_tool_number": 1,
+      "tool_numbers": [0, 1],
+      "tool_names": ["T0", "T1"]
+    },
+    "tool T0": {
+      "name": "T0",
+      "tool_number": 0,
+      "active": false,
+      "mounted": false,
+      "gcode_x_offset": 0.0,
+      "gcode_y_offset": 0.0,
+      "gcode_z_offset": 0.0,
+      "extruder": "extruder",
+      "fan": "fan0"
+    },
+    "tool T1": {
+      "name": "T1",
+      "tool_number": 1,
+      "active": true,
+      "mounted": true,
+      "gcode_x_offset": 0.15,
+      "gcode_y_offset": -0.1,
+      "gcode_z_offset": 0.02,
+      "extruder": "extruder1",
+      "fan": "fan1"
+    }
+  }
+}

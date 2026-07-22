@@ -1,0 +1,12 @@
+{
+  "deviceName": "Kobra X",
+  "deviceType": "FDM",
+  "modelId": "20030",
+  "modelName": "Kobra X",
+  "ip": "192.0.2.10",
+  "usn": "USN-FAKE",
+  "cn": "CN-FAKE",
+  "token": "TOKEN-FAKE",
+  "rtspUrl": "rtsp://192.0.2.10/live",
+  "fileUploadurl": "http://192.0.2.10:18910/gcode_upload"
+}

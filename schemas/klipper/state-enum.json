@@ -1,0 +1,36 @@
+{
+  "_meta": {
+    "schema_kind": "state-enum",
+    "title": "Klipper / Moonraker — print_stats.state → normalized lifecycle",
+    "vendor": "klipper",
+    "family": "any Moonraker host (Voron / RatRig / Sovol + vendor Klipper forks)",
+    "confidence": "🟡 source-read",
+    "derived_from": {
+      "paper": "../../protocols/klipper-moonraker.md",
+      "section": "Reading state — State (native → normalized)",
+      "source_note": "Enum transcribed from Klipper source (klippy/extras/print_stats.py) via Moonraker's object model; ecosystem-corroborated (every Mainsail/Fluidd client speaks it), not first-party hardware-captured in this paper.",
+      "reference_point": "Moonraker ~v0.10.0 (8e948f1a) / Klipper ~v0.13.0 (c707dd19), 2026-06-19"
+    },
+    "facts_only": true,
+    "sanitized": true,
+    "notes": [
+      "Six documented values; map any other string to `unknown` rather than erroring.",
+      "State arrives via `printer.objects.subscribe`/`query` under object `print_stats`; deltas are sparse — deep-merge field-by-field, ordered by `eventtime`.",
+      "Do NOT confuse the lifecycle `print_stats.state` with `idle_timeout.state` (Idle/Printing/Ready) or `pause_resume.is_paused` — separate objects.",
+      "Normalized vocabulary here: standby | printing | paused | complete | cancelled | error | unknown."
+    ]
+  },
+
+  "field": "print_stats.state",
+  "unknown_maps_to": "unknown",
+  "normalized_values": ["standby", "printing", "paused", "complete", "cancelled", "error", "unknown"],
+
+  "mappings": [
+    { "native": "standby",   "normalized": "standby" },
+    { "native": "printing",  "normalized": "printing" },
+    { "native": "paused",    "normalized": "paused" },
+    { "native": "complete",  "normalized": "complete" },
+    { "native": "cancelled", "normalized": "cancelled" },
+    { "native": "error",     "normalized": "error" }
+  ]
+}

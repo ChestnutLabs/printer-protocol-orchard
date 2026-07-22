@@ -1,0 +1,7 @@
+# Third-party libraries for the reference clients.
+# Install with:  pip install -r requirements.txt
+# Each client supplies its own credentials at runtime (env var / CLI arg); nothing is bundled here.
+
+requests>=2.32,<2.33         # moonraker, duet-rrf, octoprint, prusalink (HTTP; prusalink uses requests' HTTP Digest auth)
+websockets>=12.0,<13.0       # sdcp (asyncio WebSocket envelope); also usable by the moonraker client's WS subscription
+paho-mqtt>=2.1,<2.2          # bambu (MQTT over TLS on the LAN)

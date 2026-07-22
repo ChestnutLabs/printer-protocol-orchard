@@ -1,0 +1,12 @@
+# Documentation build dependencies for the Printer Protocol Orchard.
+#
+# Install with:  pip install -r requirements-docs.txt
+# Serve locally: mkdocs serve
+# Build:         mkdocs build --strict
+#
+# Mermaid diagrams (```mermaid fences) render via pymdownx.superfences'
+# custom_fence wired to mkdocs-material's built-in Mermaid.js support —
+# no extra plugin and no extra JavaScript dependency is required.
+
+mkdocs-material>=9.5,<10
+pymdown-extensions>=10.7,<11

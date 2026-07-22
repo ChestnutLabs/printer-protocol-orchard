@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "schema_kind": "command-catalog",
+    "title": "Duet / RepRapFirmware — neutral intent → GCode command map",
+    "vendor": "duet3d",
+    "family": "RepRapFirmware 3.0+ (GCode-native control)",
+    "confidence": "🟡 source-read (RRF GCode dictionary); M568 A0/A1/A2 confirmed against official docs (shippable without hardware); M23/M24 auto-start semantics 🔵 community",
+    "derived_from": {
+      "paper": "../../protocols/duet.md",
+      "section": "Writing / control — a curated intent → GCode map",
+      "source_note": "Clean-room from the RRF GCode dictionary. Each mapping is an uncopyrightable interface fact; verify against the dictionary."
+    },
+    "facts_only": true,
+    "sanitized": true,
+    "notes": [
+      "RRF is GCode-native — there are NO structured setpoint endpoints; every action is a GCode string. Emit curated, typed, safe GCode from a registry and gate arbitrary user GCode off by default.",
+      "⚠️ Use M568 for tool temps/state (RRF 3.3+), NOT `M104 T<n> S…` (that is the Marlin-lineage form). G10 stays valid for OFFSETS only.",
+      "Command channel differs by mode; the GCode vocabulary is identical. Standalone: GET /rr_gcode?gcode=<codes> (response {\"bufferSpace\":int}; reply text via GET /rr_reply). SBC: POST /machine/code (raw body).",
+      "Gate motion mid-print; gate tool-select / e-stop / firmware-reset / config-writes harder still."
+    ]
+  },
+
+  "intents": [
+    { "intent": "jog_relative",      "gcode": "G91 ; G1 X.. Y.. Z.. F<mm/min> ; G90", "tier": "motion", "note": "wrap in relative/absolute; gate off mid-print" },
+    { "intent": "home_all",          "gcode": "G28",                  "tier": "motion" },
+    { "intent": "home_axis",         "gcode": "G28 X | G28 Y | G28 Z", "tier": "motion" },
+    { "intent": "tool_active_temp",  "gcode": "M568 P<tool> S<°C>",   "tier": "thermal", "note": "M568 is the modern setter (RRF 3.3+)" },
+    { "intent": "tool_standby_temp", "gcode": "M568 P<tool> R<°C>",   "tier": "thermal" },
+    { "intent": "tool_state",        "gcode": "M568 P<tool> A0|A1|A2", "tier": "thermal", "note": "A0=off A1=standby A2=active" },
+    { "intent": "tool_offset",       "gcode": "G10 P<tool> X.. Y.. Z..", "tier": "config", "note": "G10 retained for OFFSETS only" },
+    { "intent": "bed_temp",          "gcode": "M140 S<°C>  (M190 = set+wait)", "tier": "thermal", "gate": "heat.bedHeaters non-empty" },
+    { "intent": "chamber_temp",      "gcode": "M141 S<°C>",           "tier": "thermal", "gate": "heat.chamberHeaters non-empty" },
+    { "intent": "select_tool",      "gcode": "T<n>  (T-1 = deselect; T<n> P0 = skip macros)", "tier": "dangerous", "note": "toolchanger" },
+    { "intent": "fan_speed",         "gcode": "M106 P<fan> S<0-255 or 0-1>  (M107 off)", "tier": "device", "note": "fan 0 = part-cooling" },
+    { "intent": "feedrate_factor",   "gcode": "M220 S<percent>",      "tier": "device" },
+    { "intent": "emergency_stop",    "gcode": "M112  (-> halted; recover with M999)", "tier": "dangerous", "note": "hold-to-confirm UX" }
+  ],
+
+  "print_launch": {
+    "comment": "upload != launch — upload the file (see the paper), then a GCode. Upload-and-hold is the natural default.",
+    "preferred_oneshot": "M32 \"0:/gcodes/<file>\"  ; select file AND start SD print (one round-trip, minimal race)",
+    "two_step": ["M23 \"<path>\"  ; select — loads, does NOT start", "M24  ; start/resume"],
+    "pause": "M25",
+    "cancel": "M0  (M0 H1 to keep heaters) — confirm the safe cancel sequence on hardware",
+    "confirm_by": "no synchronous 'started' ack — poll state.status -> processing AND job.file.fileName == launched path",
+    "gate": "launch only when state.status == idle (RRF refuses a second job while one runs)",
+    "path_notation": "RRF volume notation (0:/gcodes/<file>); read directories.gCodes + enumerate volumes[] rather than hardcode; plain .gcode only (no binary-gcode)"
+  }
+}

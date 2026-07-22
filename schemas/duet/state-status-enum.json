@@ -1,0 +1,57 @@
+{
+  "_meta": {
+    "schema_kind": "state-enum",
+    "title": "Duet / RepRapFirmware — state.status (Object Model) → normalized lifecycle",
+    "vendor": "duet3d",
+    "family": "RepRapFirmware 3.0+ (standalone rr_* and SBC/DSF)",
+    "confidence": "🟡 source-read (docs.duet3d.com + LGPL @duet3d/objectmodel); no Duet on the bench",
+    "derived_from": {
+      "paper": "../../protocols/duet.md",
+      "section": "Reading state — Lifecycle (state.status)",
+      "source_note": "Clean-room from Duet3D docs + the LGPL @duet3d/objectmodel enum strings. No code copied; the only credential is a user password (never here)."
+    },
+    "facts_only": true,
+    "sanitized": true,
+    "notes": [
+      "⚠️ The printing state is `processing` — there is NO value literally named `printing`. (The legacy `rr_status` numeric/letter enum with a literal `printing`/`toolChange` is a different, older, deprecated surface — don't use it.)",
+      "There is NO distinct `completed` value — completion is inferred from a job returning to `idle` with the just-finished job's terminal flags set (cancelled/aborted/simulated).",
+      "`disconnected` is a client pseudo-status RRF does not emit.",
+      "An unlisted value degrades to busy/unknown, never raises.",
+      "Normalized vocabulary: idle | printing | paused | busy | connecting | error | offline (+ transient)."
+    ]
+  },
+
+  "field": "state.status",
+  "value_type": "exact camelCase string (14 values)",
+  "unknown_maps_to": "busy",
+  "native_values": ["disconnected", "starting", "updating", "off", "halted", "pausing", "paused", "resuming", "cancelling", "processing", "simulating", "busy", "changingTool", "idle"],
+
+  "mappings": [
+    { "native": "idle",         "normalized": "idle" },
+    { "native": "processing",   "normalized": "printing", "note": "THE printing state (not a value named 'printing')" },
+    { "native": "simulating",   "normalized": "printing", "note": "a dry-run for timing — FLAG it; do not count as a physical print" },
+    { "native": "paused",       "normalized": "paused" },
+    { "native": "pausing",      "normalized": "paused",   "transient": true },
+    { "native": "resuming",     "normalized": "printing", "transient": true },
+    { "native": "cancelling",   "normalized": "busy",     "transient": true },
+    { "native": "changingTool", "normalized": "busy",     "note": "machine-level 'mid tool-change'; carries a toolchange sub-state (state.nextTool/previousTool)" },
+    { "native": "busy",         "normalized": "busy",     "note": "homing/macro/motion — NOT a print" },
+    { "native": "starting",     "normalized": "connecting","note": "boot" },
+    { "native": "updating",     "normalized": "connecting","note": "firmware flash" },
+    { "native": "halted",       "normalized": "error",    "note": "emergency-stopped after M112; recover with M999" },
+    { "native": "off",          "normalized": "offline" },
+    { "native": "disconnected", "normalized": "offline",  "note": "client pseudo-status; RRF does not emit it" }
+  ],
+
+  "completion_inference": {
+    "comment": "no 'completed' status — detect completion when",
+    "rule": "state.status transitions to `idle` AND the just-finished job carries terminal flags (cancelled / aborted / simulated)"
+  },
+
+  "mode_discriminator": {
+    "comment": "which LAN dialect the board is in — confirm in-band, don't guess",
+    "field": "sbc",
+    "standalone": "null / absent",
+    "sbc_dsf": "populated (exclusively maintained by DSF in SBC mode); DSF version at sbc.dsf.version (there is NO state.dsfVersion)"
+  }
+}

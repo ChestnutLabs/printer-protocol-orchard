@@ -1,0 +1,43 @@
+{
+  "type": "info",
+  "action": "report",
+  "msgid": "00000000-0000-4000-8000-000000000010",
+  "timestamp": 1780000000000,
+  "data": {
+    "state": "free",
+    "temp": {
+      "curr_nozzle_temp": 25,
+      "curr_hotbed_temp": 24,
+      "target_nozzle_temp": 0,
+      "target_hotbed_temp": 0
+    },
+    "fan_speed_pct": 0,
+    "aux_fan_speed_pct": 100,
+    "print_speed_mode": 2,
+    "features": {
+      "auto_leveling_support": true,
+      "camera_timelapse_support": true,
+      "delete_batch_support": true,
+      "drying_first_support": true,
+      "flow_calibration_support": true,
+      "fod_support": true,
+      "gcode_3mf_support": true,
+      "keep_print_head_temp_support": true,
+      "pre_cancel_support": true,
+      "preheating_support": true,
+      "shengwang_rdt_support": true,
+      "shengwang_rtc_support": true,
+      "vibration_compensation_support": true
+    },
+    "ip": "192.0.2.10",
+    "model": "Anycubic Kobra X",
+    "printerName": "test-printer",
+    "project": null,
+    "last_project": null,
+    "urls": {
+      "fileUploadurl": "http://192.0.2.10:18910/gcode_upload",
+      "rtspUrl": "rtsp://192.0.2.10/live"
+    },
+    "version": "1.2.0.2"
+  }
+}

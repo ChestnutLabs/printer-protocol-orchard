@@ -1,0 +1,74 @@
+{
+  "_meta": {
+    "schema_kind": "command-catalog",
+    "title": "Elegoo SDCP (Centauri Carbon 1) — integer Cmd catalog + result/error codes",
+    "vendor": "elegoo",
+    "family": "Centauri Carbon 1 (SDCP)",
+    "confidence": "🟡 source-read (Elegoo first-party SDK); 🔵 crash-on-partial-start behaviour community-confirmed",
+    "derived_from": {
+      "paper": "../../protocols/elegoo.md",
+      "section": "Writing / control — SDCP (CC1) integer Cmd codes",
+      "source_note": "Clean-room from `elegoo-link`. Command params described as facts; no code copied."
+    },
+    "facts_only": true,
+    "sanitized": true,
+    "notes": [
+      "⚠️ Sending a Cmd the firmware does not know can crash the daemon and kill an active print — only probe speculative Cmds when idle (CurrentStatus == 0).",
+      "⚠️ The START command (128) MUST carry all six inner fields; a partial start crashes the firmware.",
+      "There is NO live temperature / fan / light / motion / speed write on CC1 — those exist only as commented-out SDK stubs. Do not emit them.",
+      "Upload-and-hold is native: run the upload sequence and simply skip Cmd 128."
+    ]
+  },
+
+  "commands": [
+    { "cmd": 0,   "name": "STATUS",      "params": "{}", "note": "force a sdcp/status refresh; also the keepalive/poll floor" },
+    { "cmd": 1,   "name": "ATTRIBUTES",  "params": "{}", "note": "static identity/capabilities → sdcp/attributes" },
+    { "cmd": 128, "name": "START",       "params": { "Filename": "<must match uploaded name>", "StartLayer": "int (0 = from start; enables resume-from-layer)", "Calibration_switch": "int", "PrintPlatformType": "int", "Tlp_Switch": "int (time-lapse)", "slot_map": "[] for single-material; else [{t,canvas_id,tray_id}] — see below" }, "note": "⚠️ send ALL six fields; result at response Ack (see start_ack)" },
+    { "cmd": 129, "name": "PAUSE",       "params": "{}" },
+    { "cmd": 130, "name": "STOP",        "params": "{}", "note": "destructive — treat as hold-to-confirm" },
+    { "cmd": 131, "name": "RESUME",      "params": "{}", "note": "CC1 DOES have a live resume (unlike CC2, which does not)" },
+    { "cmd": 324, "name": "GET_CANVAS",  "params": "{}", "note": "read the CANVAS feeder; empty body; not in the status push" }
+  ],
+
+  "slot_map_element": {
+    "comment": "print-time color->slot assignment inside START; snake_case on the wire (the SDK's camelCase {t,trayId,canvasId} is internal-only)",
+    "shape": { "t": "int — sliced tool/color index", "canvas_id": "int 0..4 — which CANVAS unit", "tray_id": "int 1..4 — which physical tray" }
+  },
+
+  "start_ack": {
+    "comment": "the START (128) result, delivered inline at the response's `Ack` field. Confirm launch by state (sdcp/status -> PRINTING), not the ack alone.",
+    "field": "Ack",
+    "values": {
+      "0": "OK",
+      "1": "busy",
+      "2": "file not found",
+      "3": "MD5 failed",
+      "4": "file read failed",
+      "5": "invalid format",
+      "6": "model mismatch"
+    }
+  },
+
+  "error_number": {
+    "comment": "a separate file/launch error field `ErrorNumber` in the status/PrintInfo block; any non-zero is an error",
+    "field": "PrintInfo.ErrorNumber",
+    "values": {
+      "0": "none",
+      "1": "MD5 check failed",
+      "2": "file I/O failed",
+      "3": "invalid resolution",
+      "4": "unknown format",
+      "5": "unknown model"
+    }
+  },
+
+  "upload": {
+    "comment": "step 1 of launch — chunked multipart to the same :3030 server",
+    "endpoint": "POST http://<ip>:3030/uploadFile/upload",
+    "content_type": "multipart/form-data",
+    "chunk_bytes": "<= 1 MB",
+    "fields": { "File": "the chunk", "S-File-MD5": "whole-file MD5 hex (same on every chunk)", "Check": "1 = verify", "Offset": "int", "Uuid": "one value for the whole transfer", "TotalSize": "int" },
+    "per_chunk_ok": "code == \"000000\"; abort on -1/-2/-3/-4",
+    "settle": "~1s REQUIRED delay after the last chunk before sending Cmd 128 (lets the firmware close the file handle)"
+  }
+}

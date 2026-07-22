@@ -1,0 +1,10 @@
+{
+  "type": "status",
+  "action": "update",
+  "msgid": "00000000-0000-0000-0000-000000000003",
+  "timestamp": 1751400001000,
+  "data": {
+    "extruder": { "temperature": 208.6 },
+    "fan_generic aux": { "speed": 0.5 }
+  }
+}

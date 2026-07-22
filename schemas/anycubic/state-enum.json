@@ -1,0 +1,51 @@
+{
+  "_meta": {
+    "schema_kind": "state-enum",
+    "title": "Anycubic (Kobra) — native print state → normalized lifecycle",
+    "vendor": "anycubic",
+    "family": "Kobra (avata / gkapi)",
+    "confidence": "🟢 hardware-validated",
+    "derived_from": {
+      "paper": "../../protocols/anycubic.md",
+      "section": "Reading state — State (native → normalized)",
+      "source_note": "Clean-room from Anycubic's own SlicerNext (OrcaSlicer fork) device layer + sanitized owner MQTT captures. No code copied; no secrets."
+    },
+    "validated_on": [
+      { "model": "Kobra X", "model_id": "20030", "firmware": "1.2.0.2", "path": "read" },
+      { "model": "Kobra 3", "model_id": "20024", "path": "write/command" }
+    ],
+    "facts_only": true,
+    "sanitized": true,
+    "notes": [
+      "Some native tokens are misspelled on the wire (`stoped`, `canceled`) — match them exactly; the spelling is the real value.",
+      "Normalized vocabulary here: standby | preheating | printing | paused | cancelled | complete | error."
+    ]
+  },
+
+  "field": "state",
+  "field_precedence": [
+    {
+      "report_type": "info",
+      "prefer": "project.state",
+      "over": "state",
+      "why": "In a rich `info` snapshot the job-scoped `project.state` is authoritative over the top-level device `state`."
+    }
+  ],
+  "unknown_maps_to": "unknown",
+  "normalized_values": ["standby", "preheating", "printing", "paused", "cancelled", "complete", "error"],
+
+  "mappings": [
+    { "native": "free",         "normalized": "standby" },
+    { "native": "preheating",   "normalized": "preheating" },
+    { "native": "busy",         "normalized": "printing" },
+    { "native": "printing",     "normalized": "printing" },
+    { "native": "auto_leveling","normalized": "printing" },
+    { "native": "resuming",     "normalized": "printing" },
+    { "native": "pausing",      "normalized": "paused" },
+    { "native": "paused",       "normalized": "paused" },
+    { "native": "stoped",       "normalized": "cancelled", "sic": true, "note": "Misspelled on the wire ('stoped', one 'p')." },
+    { "native": "canceled",     "normalized": "cancelled", "sic": true, "note": "US single-'l' spelling as shipped." },
+    { "native": "finished",     "normalized": "complete" },
+    { "native": "failed",       "normalized": "error" }
+  ]
+}

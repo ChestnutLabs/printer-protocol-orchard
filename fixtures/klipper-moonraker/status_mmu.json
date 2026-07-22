@@ -1,0 +1,32 @@
+{
+  "type": "status",
+  "action": "update",
+  "msgid": "00000000-0000-0000-0000-000000000002",
+  "timestamp": 1751400001000,
+  "data": {
+    "mmu": {
+      "enabled": true,
+      "is_homed": true,
+      "num_gates": 4,
+      "gate": 1,
+      "tool": 0,
+      "filament": "Loaded",
+      "filament_pos": 8,
+      "filament_position": 123.4,
+      "filament_direction": 1,
+      "action": "Idle",
+      "ttg_map": [1, 0, 2, 3],
+      "endless_spool_enabled": true,
+      "endless_spool_groups": [0, 0, 1, 1],
+      "gate_status": [1, 1, 0, 2],
+      "gate_material": ["PLA", "PETG", "", "ABS"],
+      "gate_color": ["red", "00FF00", "", "#0000FF"],
+      "gate_color_rgb": [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 1.0]],
+      "gate_name": ["Red PLA", "Green PETG", "", "Blue ABS"],
+      "gate_temperature": [210, 240, 0, 250],
+      "gate_spool_id": [101, 102, -1, 104],
+      "flow_rate": 98.5,
+      "headroom": 12.0
+    }
+  }
+}

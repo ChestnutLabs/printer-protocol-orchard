@@ -1,0 +1,13 @@
+{
+  "type": "tempature",
+  "action": "auto",
+  "msgid": "00000000-0000-4000-8000-000000000020",
+  "timestamp": 1780000000200,
+  "data": {
+    "curr_hotbed_temp": 60,
+    "curr_nozzle_temp": 205,
+    "target_hotbed_temp": 60,
+    "target_nozzle_temp": 210,
+    "taskid": "T-FAKE"
+  }
+}

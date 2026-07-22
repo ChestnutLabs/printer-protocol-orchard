@@ -1,0 +1,59 @@
+# --- Secrets / credentials — NEVER commit (see CLEANROOM-CHECKLIST.md §2) ---
+*.crt
+*.key
+*.pem
+*.p12
+*.pfx
+*.cer
+*.der
+secrets/
+**/secrets/
+*.secret
+
+# --- Raw, un-sanitized captures — sanitize into fixtures/ before committing (see fixtures/README.md) ---
+captures-raw/
+**/captures-raw/
+*.raw.jsonl
+*.raw.pcap
+*.pcapng
+
+# --- Vendor binaries / bundles — we document facts, we don't redistribute artifacts ---
+*.dll
+*.so
+*.dylib
+*.dat
+*.appimage
+*.AppImage
+
+# --- Local clones of vendor slicers used for research (keep them out of the repo) ---
+vendor-src/
+**/vendor-src/
+
+# --- Local research / scratch / test area — contents NEVER committed (keeps the repo clean) ---
+# Do research, experiments, throwaway scripts, and un-sanitized captures under ProjectSource/.
+# Only the explainer README is tracked, so the convention survives a clone; everything else is
+# ignored. The clean-room scanner also skips this dir (see .cleanroomignore).
+ProjectSource/*
+!ProjectSource/README.md
+
+# --- Python / tooling caches (scripts/ + examples/) ---
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.venv/
+venv/
+
+# --- Docs site build output (MkDocs) ---
+# site_dir is a sibling (../_orchard_site) so git normally never sees it; ignore the
+# common in-tree fallbacks anyway in case someone builds with a different site_dir.
+site/
+_orchard_site/
+
+# --- OS / editor cruft ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

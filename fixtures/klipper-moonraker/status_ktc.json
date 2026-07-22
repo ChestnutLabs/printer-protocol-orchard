@@ -1,0 +1,32 @@
+{
+  "type": "status",
+  "action": "update",
+  "msgid": "00000000-0000-0000-0000-000000000006",
+  "timestamp": 1751400005000,
+  "data": {
+    "ktc": {
+      "state": "ready",
+      "active_tool": "tool1",
+      "active_tool_n": 1,
+      "tools": ["tool0", "tool1"]
+    },
+    "ktc_tool 0": {
+      "state": "parked",
+      "offset_x": 0.0,
+      "offset_y": 0.0,
+      "offset_z": 0.0,
+      "heater": "extruder",
+      "target": 0,
+      "standby_temp": 150
+    },
+    "ktc_tool 1": {
+      "state": "picked_up",
+      "offset_x": 0.2,
+      "offset_y": 0.1,
+      "offset_z": -0.05,
+      "heater": "extruder1",
+      "target": 210,
+      "standby_temp": 150
+    }
+  }
+}

@@ -1,0 +1,84 @@
+name: Hardware-validation report
+description: Promote a 🟡 source-read paper to 🟢 hardware-validated by reporting what you confirmed on a real printer you own.
+title: "[hw-validation] <family> — <model>"
+labels: ["hardware-validation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for validating a paper against real hardware. This is how a **🟡 source-read** family
+        earns a **🟢 hardware-validated** tag.
+
+        Please describe **interoperability facts you observed on a printer you own** — ports reachable,
+        field names that matched, verbs that worked. **Do not** paste raw certificates, access codes, or
+        unsanitized captures. See [`CLEANROOM-CHECKLIST.md`](../../CLEANROOM-CHECKLIST.md) before you paste anything.
+  - type: dropdown
+    id: family
+    attributes:
+      label: Paper / family
+      description: Which protocol paper does this validation cover?
+      options:
+        - Anycubic
+        - Bambu
+        - Klipper / Moonraker
+        - Creality
+        - Duet / RRF
+        - Elegoo
+        - FlashForge
+        - Marlin serial
+        - OctoPrint
+        - PrusaLink
+        - Snapmaker
+        - Other (name it in the notes)
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: Printer model
+      description: Exact model you tested (e.g. the specific variant, not just the series).
+      placeholder: "e.g. Vendor Model X1"
+    validations:
+      required: true
+  - type: input
+    id: firmware
+    attributes:
+      label: Firmware version
+      description: Firmware / OS version string reported by the printer.
+      placeholder: "e.g. 1.2.3"
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirmed
+    attributes:
+      label: What you confirmed
+      description: Tick everything you personally observed working on the hardware.
+      options:
+        - label: Transport / port reachable (the documented port answers)
+        - label: Discovery works (the printer is found as documented)
+        - label: Auth mechanism behaves as documented
+        - label: Read / state fields match the paper's field map
+        - label: Control verbs work (move / home / temp / print control)
+        - label: Feeder / AMS / multi-material state reads as documented
+        - label: File upload + print launch works end to end
+  - type: textarea
+    id: notes
+    attributes:
+      label: Sanitized capture / notes
+      description: >
+        Field-by-field notes, sanitized wire snippets, or diffs from the paper. Sanitize per
+        CLEANROOM-CHECKLIST: IPs → 192.0.2.x, serials/ids → SN-EXAMPLE / deviceid-0001,
+        credential-shaped fields → [redacted], filenames → example.gcode.
+      render: text
+    validations:
+      required: true
+  - type: checkboxes
+    id: sanitized-ack
+    attributes:
+      label: Sanitization acknowledgement
+      options:
+        - label: >
+            I confirm any capture or output I pasted is **sanitized** per
+            [`CLEANROOM-CHECKLIST.md`](../../CLEANROOM-CHECKLIST.md) — no real IPs, serials/ids/MACs,
+            access/auth/check codes, tokens, or certificate/key material.
+          required: true

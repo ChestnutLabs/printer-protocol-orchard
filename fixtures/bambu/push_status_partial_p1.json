@@ -1,0 +1,12 @@
+{
+  "print": {
+    "command": "push_status",
+    "msg": 1,
+    "sequence_id": "2022",
+    "gcode_state": "PAUSE",
+    "mc_percent": 47,
+    "mc_remaining_time": 80,
+    "layer_num": 66,
+    "nozzle_temper": 14418133
+  }
+}

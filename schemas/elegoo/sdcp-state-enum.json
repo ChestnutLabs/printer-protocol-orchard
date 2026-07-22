@@ -1,0 +1,87 @@
+{
+  "_meta": {
+    "schema_kind": "state-enum",
+    "title": "Elegoo SDCP (Centauri Carbon 1) — the TWO status enums (machine + job)",
+    "vendor": "elegoo",
+    "family": "Centauri Carbon 1 (SDCP)",
+    "confidence": "🟡 source-read (Elegoo first-party SDK); 🔵 SDCP path community firmware-validated",
+    "derived_from": {
+      "paper": "../../protocols/elegoo.md",
+      "section": "Reading state — SDCP path (CC1): two enums, both load-bearing",
+      "source_note": "Clean-room from `elegoo-link` + SDCP v3.0 spec. FDM firmware repurposes the resin status enum."
+    },
+    "facts_only": true,
+    "sanitized": true,
+    "notes": [
+      "⚠️ TWO distinct enums live on the SAME frame — keep them separate. The integer codes COLLIDE: e.g. `8` = FILE_CHECKING in CurrentStatus but STOPED in PrintInfo.Status; `9` = HOMING vs COMPLETE.",
+      "The idle gate keys off CurrentStatus == 0 (IDLE) — that is the safe-to-write / safe-to-probe signal.",
+      "PrintInfo.Status is the real job lifecycle. Codes 2/3/4 (DROPPING/EXPOSURING/LIFTING) are resin-only leftovers that never fire on FDM.",
+      "A code outside the known range (newer firmware) normalizes to `unknown` while preserving the raw value — NEVER to `error`.",
+      "Normalized vocabulary: standby | preheating | printing | paused | resuming | cancelled | complete | error | unknown."
+    ]
+  },
+
+  "machine_status": {
+    "field": "CurrentStatus",
+    "range": "0..11",
+    "purpose": "machine-level state; the idle gate",
+    "known_values": {
+      "0": "IDLE (the write/probe gate)",
+      "1": "PRINTING",
+      "2": "FILE_TRANSFERRING",
+      "8": "FILE_CHECKING",
+      "9": "HOMING"
+    },
+    "unknown": "other codes are busy/transient; treat as busy, never error"
+  },
+
+  "job_status": {
+    "field": "PrintInfo.Status",
+    "range": "0..26",
+    "purpose": "job sub-status — the real lifecycle signal",
+    "unknown_maps_to": "unknown",
+    "mappings": [
+      { "code": 0,  "native": "IDLE",            "normalized": "standby" },
+      { "code": 1,  "native": "HOMING",          "normalized": "preheating" },
+      { "code": 15, "native": "AUTOLEVELING",    "normalized": "preheating" },
+      { "code": 16, "native": "PREHEATING",      "normalized": "preheating" },
+      { "code": 18, "native": "PRINT_START",     "normalized": "preheating" },
+      { "code": 19, "native": "*_COMPLETED",     "normalized": "preheating", "note": "startup-phase completion" },
+      { "code": 21, "native": "*_COMPLETED",     "normalized": "preheating", "note": "startup-phase completion" },
+      { "code": 22, "native": "*_COMPLETED",     "normalized": "preheating", "note": "startup-phase completion" },
+      { "code": 13, "native": "PRINTING",        "normalized": "printing", "note": "FDM active print" },
+      { "code": 10, "native": "CHECKING",        "normalized": "printing" },
+      { "code": 11, "native": "CHECKING",        "normalized": "printing" },
+      { "code": 5,  "native": "PAUSING",         "normalized": "paused" },
+      { "code": 6,  "native": "PAUSED",          "normalized": "paused" },
+      { "code": 12, "native": "RESUMING",        "normalized": "resuming" },
+      { "code": 7,  "native": "STOPPING",        "normalized": "cancelled" },
+      { "code": 8,  "native": "STOPED",          "normalized": "cancelled", "sic": true, "note": "misspelled on the wire (one 'p')" },
+      { "code": 9,  "native": "COMPLETE",        "normalized": "complete" },
+      { "code": 14, "native": "ERROR",           "normalized": "error" },
+      { "code": 2,  "native": "DROPPING",        "normalized": "n/a", "note": "resin-only; never fires on FDM" },
+      { "code": 3,  "native": "EXPOSURING",      "normalized": "n/a", "note": "resin-only; never fires on FDM" },
+      { "code": 4,  "native": "LIFTING",         "normalized": "n/a", "note": "resin-only; never fires on FDM" },
+      { "code": 23, "native": "AUTO_FEEDING",    "normalized": "printing", "note": "material-handling phase (CANVAS)" },
+      { "code": 24, "native": "FEEDOUT",         "normalized": "printing", "note": "material-handling phase (CANVAS)" },
+      { "code": 25, "native": "FEED (material)", "normalized": "printing", "note": "material-handling phase (CANVAS)" },
+      { "code": 26, "native": "FEED (material)", "normalized": "printing", "note": "material-handling phase (CANVAS)" }
+    ]
+  },
+
+  "timing": {
+    "comment": "⚠️ classic unit trap — see ../../patterns/timing-normalization.md",
+    "CurrentTicks": "SECONDS (int64) — do NOT divide by 1000",
+    "TotalTicks": "SECONDS (int64)",
+    "RemainTime": "does NOT exist — compute remaining = max(0, TotalTicks - CurrentTicks)",
+    "Progress": "0..100 int, read VERBATIM (not derived from ticks); normalized as a time fraction",
+    "envelope_TimeStamp": "Unix MILLISECONDS — a different unit from the tick fields on the same frame"
+  },
+
+  "temperatures_c": {
+    "nozzle": ["TempOfNozzle", "TempTargetNozzle"],
+    "bed": ["TempOfHotbed", "TempTargetHotbed"],
+    "chamber_box": ["TempOfBox", "TempTargetBox"],
+    "fans_read_only": { "field": "CurrentFanSpeed", "members": ["ModelFan", "BoxFan", "AuxiliaryFan"], "range": "0..100", "note": "read-only — no fan-set command on CC1" }
+  }
+}

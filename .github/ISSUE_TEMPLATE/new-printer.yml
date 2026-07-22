@@ -1,0 +1,63 @@
+name: New printer / family
+description: Propose a new printer or family for a protocol paper.
+title: "[new-printer] <vendor> <model(s)>"
+labels: ["new-printer"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Suggest a printer or family the orchard doesn't cover yet. The most useful lead is a link to the
+        vendor's **own open-source slicer fork** — that's usually the cleanest documented source for a
+        LAN control protocol.
+  - type: input
+    id: vendor
+    attributes:
+      label: Vendor
+      description: Manufacturer name (nominative — just to identify the device).
+      placeholder: "e.g. Vendor"
+    validations:
+      required: true
+  - type: input
+    id: models
+    attributes:
+      label: Model(s)
+      description: One or more models this family covers.
+      placeholder: "e.g. Model A, Model A Pro"
+    validations:
+      required: true
+  - type: input
+    id: slicer-fork
+    attributes:
+      label: Open-source slicer fork (link)
+      description: Does the vendor ship an open-source slicer (often an OrcaSlicer/PrusaSlicer/Cura fork)? Link it.
+      placeholder: "https://github.com/..."
+    validations:
+      required: false
+  - type: dropdown
+    id: paradigm
+    attributes:
+      label: Suspected paradigm
+      description: Best guess at the control model, if you have one.
+      options:
+        - Moonraker
+        - proprietary-LAN
+        - RRF-object-model
+        - host-controller
+        - USB-serial
+        - unknown
+    validations:
+      required: true
+  - type: textarea
+    id: known
+    attributes:
+      label: What you already know
+      description: Ports, discovery behavior, message shapes, field names — anything documented from the vendor's own sources or observed on a device you own.
+    validations:
+      required: false
+  - type: textarea
+    id: links
+    attributes:
+      label: Links / references
+      description: Repos, docs, threads, or other references.
+    validations:
+      required: false

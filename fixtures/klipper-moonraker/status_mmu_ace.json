@@ -1,0 +1,33 @@
+{
+  "type": "status",
+  "action": "update",
+  "msgid": "00000000-0000-0000-0000-000000000007",
+  "timestamp": 1751400006000,
+  "data": {
+    "mmu": {
+      "enabled": true,
+      "num_gates": 4,
+      "gate_status": [1, 1, 1, 1],
+      "gate_material": ["PLA High Speed", "PLA +", "PLA Galaxy", "PLA Galaxy"],
+      "gate_color": ["0133F9", "212721", "67E470", "EE00EE"],
+      "gate_color_rgb": [
+        [0.004, 0.2, 0.976],
+        [0.129, 0.153, 0.129],
+        [0.404, 0.894, 0.439],
+        [0.933, 0.0, 0.933]
+      ],
+      "gate_temperature": [210, 210, 210, 210],
+      "gate_filament_name": [
+        "Generic PLA High Speed",
+        "Generic PLA +",
+        "Generic PLA Galaxy",
+        "Generic PLA Galaxy"
+      ],
+      "filament_id": ["", "", "", ""],
+      "gate_spool_id": [-1, -1, -1, -1],
+      "ttg_map": [0, 1, 2, 3],
+      "tool": 0,
+      "gate": 0
+    }
+  }
+}

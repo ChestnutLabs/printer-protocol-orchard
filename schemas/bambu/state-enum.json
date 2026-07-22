@@ -1,0 +1,46 @@
+{
+  "_meta": {
+    "schema_kind": "state-enum",
+    "title": "Bambu Lab — gcode_state → normalized lifecycle",
+    "vendor": "bambu",
+    "family": "X1 / P1 / A1 / P2 / X2 / H2",
+    "confidence": "🟢 hardware-validated",
+    "derived_from": {
+      "paper": "../../protocols/bambu.md",
+      "section": "Reading state — Lifecycle (gcode_state)",
+      "source_note": "Clean-room from OpenBambuAPI (GFDL-1.3 docs) + scarlton/open-bambu-networking (MIT) + owner hardware captures. No code copied; no access code / serial / cert reproduced."
+    },
+    "validated_on": [
+      { "model": "A1 Mini", "firmware": "01.08.00.00", "accessory": "AMS Lite + third-party AMS clone" }
+    ],
+    "facts_only": true,
+    "sanitized": true,
+    "notes": [
+      "`gcode_state` may arrive at the top level or nested under `print`; P-series sends only changed keys, X-series the full object — deep-merge, never replace.",
+      "Normalized vocabulary here: standby | printing | paused | complete | error."
+    ]
+  },
+
+  "field": "gcode_state",
+  "field_locations": ["gcode_state", "print.gcode_state"],
+  "unknown_maps_to": "unknown",
+  "normalized_values": ["standby", "printing", "paused", "complete", "error"],
+
+  "mappings": [
+    { "native": "IDLE",    "normalized": "standby" },
+    { "native": "PREPARE", "normalized": "printing" },
+    { "native": "SLICING", "normalized": "printing" },
+    { "native": "RUNNING", "normalized": "printing" },
+    { "native": "PAUSE",   "normalized": "paused" },
+    { "native": "FINISH",  "normalized": "complete" },
+    { "native": "FAILED",  "normalized": "error" }
+  ],
+
+  "gotchas": [
+    {
+      "id": "aborted-returns-to-idle",
+      "severity": "high",
+      "text": "An aborted print returns to gcode_state=IDLE, so a *failed* job is indistinguishable from plain standby on this field alone. Surface the fault channels (`hms[]` array of {attr,code} and the 32-bit `print_error`) to tell a real failure from an idle machine."
+    }
+  ]
+}

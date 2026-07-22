@@ -1,0 +1,24 @@
+{
+  "type": "status",
+  "action": "update",
+  "msgid": "00000000-0000-0000-0000-000000000001",
+  "timestamp": 1751400000000,
+  "data": {
+    "print_stats": {
+      "filename": "benchy.gcode",
+      "state": "printing",
+      "print_duration": 512.4,
+      "total_duration": 540.1,
+      "filament_used": 1234.5,
+      "message": "",
+      "info": { "current_layer": 12, "total_layer": 120 }
+    },
+    "virtual_sdcard": { "progress": 0.1035, "is_active": true, "file_position": 123456 },
+    "display_status": { "progress": 0.1035, "message": null },
+    "extruder": { "temperature": 210.2, "target": 210.0, "power": 0.42 },
+    "heater_bed": { "temperature": 60.1, "target": 60.0, "power": 0.31 },
+    "fan": { "speed": 1.0, "rpm": null },
+    "gcode_move": { "speed_factor": 1.0, "extrude_factor": 1.0, "speed": 1800.0 },
+    "heater_generic chamber": { "temperature": 34.5, "target": 40.0, "power": 0.5 }
+  }
+}

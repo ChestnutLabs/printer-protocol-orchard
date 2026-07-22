@@ -1,0 +1,92 @@
+{
+  "_meta": {
+    "schema_kind": "command-catalog",
+    "title": "Anycubic (Kobra) — control verb catalog (verb → channel / params)",
+    "vendor": "anycubic",
+    "family": "Kobra (avata / gkapi)",
+    "transport": "MQTT over TLS :9883 (+ plain-HTTP :18910 for the file upload leg)",
+    "confidence": "🟢 hardware-validated",
+    "derived_from": {
+      "paper": "../../protocols/anycubic.md",
+      "section": "Writing / control + Reading state (query set) + Print launch",
+      "source_note": "Clean-room from Anycubic's own SlicerNext (OrcaSlicer fork) device layer + sanitized owner captures (12 commands captured byte-for-byte on Kobra 3). No code copied; no secrets."
+    },
+    "validated_on": [
+      { "model": "Kobra 3", "model_id": "20024", "path": "write/command (12 commands byte-for-byte)" },
+      { "model": "Kobra X", "model_id": "20030", "firmware": "1.2.0.2", "path": "read" }
+    ],
+    "facts_only": true,
+    "sanitized": true,
+    "safety": "⚠️ Control writes drive a hot, moving machine. Gate every write behind an explicit 'enable writes' and validate against your own device. A 🟢 read fact is low-risk; a 🟢 control fact is not.",
+    "notes": [
+      "Each command is `{type, action}` in the PAYLOAD, not the topic — see ./topic-grammar.json rule 'action-in-payload'.",
+      "Wire spelling is load-bearing: the verb is `tempature` (sic) and `fan:setSpeed` (not `fan:set`).",
+      "`data` params are only listed where the source paper states them; elsewhere `data` is marked not-enumerated (validate live before shipping)."
+    ]
+  },
+
+  "envelope_ref": "./topic-grammar.json",
+  "default_channel": "web/printer",
+  "correlation": "Echoed `msgid`; a bare `{\"msgid\": ...}` ACK returns on a `.../response` topic. An ACK proves the command was received, not that the effect landed — confirm via the next report.",
+
+  "commands": [
+    { "type": "print", "action": "start",  "channel": "slicer/printer", "purpose": "Launch a print (see print_launch — HTTP upload precedes this).",
+      "data": { "filename": "string", "md5": "string", "ams_box_mapping": "array (multi-material routing)" } },
+    { "type": "print", "action": "pause",  "channel": "web/printer", "purpose": "Pause the active job.",  "data": "not-enumerated-in-source" },
+    { "type": "print", "action": "resume", "channel": "web/printer", "purpose": "Resume a paused job.",    "data": "not-enumerated-in-source" },
+    { "type": "print", "action": "stop",   "channel": "web/printer", "purpose": "Stop / cancel the active job.", "data": "not-enumerated-in-source", "destructive": true },
+    { "type": "print", "action": "update", "channel": "web/printer", "purpose": "Update print parameters mid-job.", "data": "not-enumerated-in-source" },
+
+    { "type": "tempature", "action": "set", "channel": "web/printer", "sic": true, "purpose": "Set a target temperature (nozzle/bed).", "data": "not-enumerated-in-source",
+      "note": "Verb is misspelled 'tempature' on the wire — match exactly." },
+    { "type": "fan", "action": "setSpeed", "channel": "web/printer", "purpose": "Set fan speed.", "data": "not-enumerated-in-source",
+      "note": "Verb is `fan:setSpeed`, NOT `fan:set`." },
+    { "type": "light", "action": "control", "channel": "web/printer", "purpose": "Control the printer light.", "data": "not-enumerated-in-source" },
+
+    { "type": "axis", "action": "move",    "channel": "web/printer", "purpose": "Jog / move an axis.", "data": "not-enumerated-in-source" },
+    { "type": "axis", "action": "turnOff", "channel": "web/printer", "purpose": "Disable steppers.", "data": "not-enumerated-in-source", "maps_to_gcode": "M84" },
+
+    { "type": "skip", "action": "start", "channel": "web/printer", "purpose": "Skip/exclude an object mid-print (skip-object).", "data": "not-enumerated-in-source" },
+    { "type": "info", "action": "setPrinterName", "channel": "web/printer", "purpose": "Rename the printer.", "data": "not-enumerated-in-source" },
+
+    { "type": "video", "action": "startCapture", "channel": "web/printer", "purpose": "Start camera capture.", "data": "not-enumerated-in-source" },
+    { "type": "video", "action": "stopCapture",  "channel": "web/printer", "purpose": "Stop camera capture.",  "data": "not-enumerated-in-source" },
+
+    { "type": "multiColorBox", "action": "getInfo", "channel": "slicer/printer", "purpose": "Query the ACE multi-material feeder (banks/slots).", "data": "not-enumerated-in-source",
+      "note": "Feeder verb; the ACE (multiColorBox) read shape is documented in the paper's Multi-material section." }
+  ],
+
+  "queries": {
+    "description": "Read-only poll set — an idle printer emits nothing unsolicited (poll ~48 s baseline); a printing one auto-pushes `tempature` + `print`.",
+    "verbs": [
+      { "type": "print",         "action": "query",   "channel": "web/printer" },
+      { "type": "status",        "action": "query",   "channel": "web/printer" },
+      { "type": "tempature",     "action": "query",   "channel": "web/printer", "sic": true },
+      { "type": "fan",           "action": "query",   "channel": "web/printer" },
+      { "type": "light",         "action": "query",   "channel": "web/printer" },
+      { "type": "multiColorBox", "action": "getInfo", "channel": "slicer/printer" }
+    ]
+  },
+
+  "print_launch": {
+    "description": "Two-step: HTTP upload, then MQTT print:start referencing the uploaded file.",
+    "steps": [
+      {
+        "step": 1,
+        "transport": "HTTP :18910",
+        "request": "multipart POST <fileUploadurl>",
+        "fields": { "gcode": "the file bytes (must be a real .gcode.3mf)", "filename": "string" },
+        "headers": { "X-File-Length": "<raw byte length>" },
+        "success": { "code": 200, "data": { "gcode": "<stored_name>" } },
+        "note": "avata /info omits fileUploadurl — take it from the MQTT report's urls.fileUploadurl; gkapi advertises it."
+      },
+      {
+        "step": 2,
+        "transport": "MQTT :9883",
+        "verb": { "type": "print", "action": "start" },
+        "channel": "slicer/printer",
+        "data": { "filename": "<stored_name>", "md5": "string", "ams_box_mapping": "array (multi-material)" }
+      }
+    ]
+  }
+}

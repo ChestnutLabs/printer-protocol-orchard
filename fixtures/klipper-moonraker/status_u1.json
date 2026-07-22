@@ -1,0 +1,38 @@
+{
+  "type": "status",
+  "action": "update",
+  "msgid": "00000000-0000-0000-0000-000000000008",
+  "timestamp": 1751400007000,
+  "data": {
+    "extruder": {
+      "temperature": 0.0,
+      "target": 0.0,
+      "power": 0.0,
+      "can_extrude": false,
+      "pressure_advance": 0.04,
+      "smooth_time": 0.04,
+      "extruder_offset": [0.0, 0.0, -0.05],
+      "gcode_offset": [0.0, 0.0, 0.0]
+    },
+    "extruder1": {
+      "temperature": 24.94,
+      "target": 0.0,
+      "extruder_offset": [0.0, 0.0, 0.0],
+      "gcode_offset": [0.0, 0.0, 0.0]
+    },
+    "extruder2": {
+      "temperature": 25.09,
+      "target": 0.0,
+      "extruder_offset": [0.1, 0.0, 0.0],
+      "gcode_offset": [0.0, 0.0, 0.0]
+    },
+    "extruder3": {
+      "temperature": 25.09,
+      "target": 0.0,
+      "extruder_offset": [0.0, 0.0, 0.0],
+      "gcode_offset": [0.0, 0.0, 0.0]
+    },
+    "toolhead": { "extruder": "extruder" },
+    "save_variables": { "variables": { "currentextruder": "extruder" } }
+  }
+}

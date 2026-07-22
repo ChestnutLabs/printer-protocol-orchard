@@ -1,0 +1,20 @@
+{
+  "type": "status",
+  "action": "update",
+  "msgid": "00000000-0000-0000-0000-000000000002",
+  "timestamp": 1751400100000,
+  "data": {
+    "print_stats": {
+      "filename": "",
+      "state": "standby",
+      "print_duration": 0.0,
+      "total_duration": 0.0,
+      "info": { "current_layer": null, "total_layer": null }
+    },
+    "virtual_sdcard": { "progress": 0.0, "is_active": false },
+    "extruder": { "temperature": 24.8, "target": 0.0 },
+    "heater_bed": { "temperature": 23.9, "target": 0.0 },
+    "fan": { "speed": 0.0 },
+    "gcode_move": { "speed_factor": 1.0 }
+  }
+}

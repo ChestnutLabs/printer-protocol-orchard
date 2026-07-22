@@ -1,0 +1,13 @@
+{
+  "type": "status",
+  "action": "update",
+  "msgid": "00000000-0000-0000-0000-000000000003",
+  "timestamp": 1751400002000,
+  "data": {
+    "mmu": {
+      "gate": 2,
+      "action": "Loading",
+      "filament": "Unloaded"
+    }
+  }
+}

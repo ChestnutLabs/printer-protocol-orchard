@@ -1,0 +1,77 @@
+{
+  "_meta": {
+    "schema_kind": "message-envelope",
+    "title": "Elegoo SDCP (Centauri Carbon 1) — WebSocket frame envelope + topic grammar",
+    "vendor": "elegoo",
+    "family": "Centauri Carbon 1 (SDCP over ws://<ip>:3030/websocket)",
+    "confidence": "🟡 source-read (Elegoo's first-party LAN SDK + the cbd-tech SDCP v3.0 spec); 🔵 the SDCP path is community firmware-validated (Centauri Carbon ~1.1.x)",
+    "derived_from": {
+      "paper": "../../protocols/elegoo.md",
+      "section": "Transport & connection — SDCP path (Centauri Carbon 1)",
+      "source_note": "Clean-room from Elegoo's own `elegoo-link` SDK (Apache-2.0) + the resin-oriented SDCP v3.0 spec. Struct shapes described, no code copied; no secrets (SDCP has no auth)."
+    },
+    "facts_only": true,
+    "sanitized": true,
+    "notes": [
+      "SDCP is NOT JSON-RPC 2.0 — there is no `jsonrpc`/`method`/`id`. Correlate on the echoed `RequestID` (a client-generated hex string).",
+      "The FDM Centauri reuses the resin SDCP envelope + `Cmd` codes but substitutes FDM field names and repurposes the status enum.",
+      "Transport limits: max 5 concurrent WS connections (a 6th connect → HTTP 500); 60s idle timeout. Keep one long-lived socket warm with a periodic `Cmd 0` (no subscribe command exists)."
+    ]
+  },
+
+  "transport": {
+    "url": "ws://<ip>:3030/websocket",
+    "tls": false,
+    "same_port_http_upload": "http://<ip>:3030/uploadFile/upload"
+  },
+
+  "request_frame": {
+    "comment": "client -> device, published on Topic `sdcp/request/<MainboardID>`",
+    "shape": {
+      "Id": "<machine UUID (string)>",
+      "Topic": "sdcp/request/<MainboardID>",
+      "Data": {
+        "Cmd": "<int — see sdcp-cmd-catalog.json>",
+        "Data": "{ command params, or {} }",
+        "RequestID": "<client-generated hex string — the correlation key>",
+        "MainboardID": "<string — from discovery; also the topic routing key>",
+        "TimeStamp": 0,
+        "From": "<int — source enum; a LAN client sends 1>"
+      }
+    }
+  },
+
+  "response_frame": {
+    "comment": "device -> client, on Topic `sdcp/response/<MainboardID>`, echoing the request's RequestID",
+    "correlation": "match on Data.RequestID (echoed); NOT a JSON-RPC id"
+  },
+
+  "topics": [
+    { "topic": "sdcp/request/<MainboardID>",    "direction": "client->device", "use": "commands" },
+    { "topic": "sdcp/response/<MainboardID>",   "direction": "device->client", "use": "acks/results (echoes RequestID)" },
+    { "topic": "sdcp/status/<MainboardID>",     "direction": "device->client", "use": "PUSHED machine + PrintInfo state (unsolicited; also the reply to Cmd 0)" },
+    { "topic": "sdcp/attributes/<MainboardID>", "direction": "device->client", "use": "static identity/capabilities (reply to Cmd 1)" },
+    { "topic": "sdcp/error/<MainboardID>",      "direction": "device->client", "use": "error notifications" },
+    { "topic": "sdcp/notice/<MainboardID>",     "direction": "device->client", "use": "notices" }
+  ],
+
+  "enums": {
+    "From": {
+      "field": "Data.From",
+      "note": "message source; a LAN client sends 1 (as the SDK does)",
+      "values": {
+        "0": "PC / LAN",
+        "1": "WEB_PC",
+        "2": "WEB",
+        "3": "APP",
+        "4": "SERVER"
+      }
+    }
+  },
+
+  "gotchas": [
+    "A wrong `MainboardID` makes you publish/subscribe to topics the printer never touches — a SILENT no-op, not an error.",
+    "Status arrives UNSOLICITED on sdcp/status — there is no subscribe command; a periodic `Cmd 0` is both poll and keepalive.",
+    "The envelope `TimeStamp` is Unix milliseconds — a different unit from the print `CurrentTicks`/`TotalTicks` (seconds) on the same frame."
+  ]
+}

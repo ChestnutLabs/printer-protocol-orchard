@@ -1,0 +1,29 @@
+{
+  "type": "print",
+  "action": "start",
+  "msgid": "00000000-0000-4000-8000-000000000211",
+  "timestamp": 1781000000500,
+  "state": "printing",
+  "code": 200,
+  "msg": "done",
+  "data": {
+    "taskid": "T-FAKE",
+    "filename": "benchy.gcode",
+    "display_filename": "benchy.gcode.3mf",
+    "progress": 44,
+    "curr_layer": 23,
+    "total_layers": 51,
+    "print_time": 3,
+    "remain_time": 4,
+    "supplies_usage": 469,
+    "source_type": "3mf",
+    "slicer": "AnycubicSlicer",
+    "resume_needs_unpack": false,
+    "source_info": {
+      "plate_index": 1,
+      "models_from": 0,
+      "slice_paras_process": 1,
+      "models": [{ "name": "benchy", "file_source": 0, "mo_file_id": -1 }]
+    }
+  }
+}

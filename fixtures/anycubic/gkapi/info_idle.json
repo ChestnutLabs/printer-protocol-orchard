@@ -1,0 +1,39 @@
+{
+  "type": "info",
+  "action": "report",
+  "msgid": "00000000-0000-4000-8000-000000000200",
+  "timestamp": 1781000000000,
+  "state": "done",
+  "code": 200,
+  "msg": "done",
+  "data": {
+    "state": "free",
+    "project": null,
+    "last_project": null,
+    "temp": {
+      "curr_nozzle_temp": 24,
+      "curr_hotbed_temp": 24,
+      "target_nozzle_temp": 0,
+      "target_hotbed_temp": 0
+    },
+    "fan_speed_pct": 0,
+    "aux_fan_speed_pct": 0,
+    "box_fan_level": 0,
+    "print_speed_mode": 2,
+    "model": "Anycubic Kobra 3",
+    "version": "2.4.6.7",
+    "printerName": "test-printer",
+    "ip": "192.0.2.20",
+    "urls": {
+      "fileUploadurl": "http://192.0.2.20:18910/gcode_upload",
+      "rtspUrl": "rtsp://192.0.2.20/live"
+    },
+    "features": {
+      "auto_leveling_support": true,
+      "vibration_compensation_support": true,
+      "flow_calibration_support": true,
+      "camera_timelapse_support": true,
+      "preheating_support": true
+    }
+  }
+}

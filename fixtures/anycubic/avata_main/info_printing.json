@@ -1,0 +1,49 @@
+{
+  "type": "info",
+  "action": "report",
+  "msgid": "00000000-0000-4000-8000-000000000012",
+  "timestamp": 1780000000120,
+  "data": {
+    "state": "busy",
+    "temp": {
+      "curr_nozzle_temp": 220,
+      "curr_hotbed_temp": 60,
+      "target_nozzle_temp": 220,
+      "target_hotbed_temp": 60
+    },
+    "fan_speed_pct": 89,
+    "aux_fan_speed_pct": 100,
+    "print_speed_mode": 2,
+    "project": {
+      "state": "printing",
+      "print_status": 1,
+      "filename": "benchy.gcode",
+      "task_id": "T-FAKE",
+      "progress": 18,
+      "curr_layer": 8,
+      "total_layers": 51,
+      "print_time": 1,
+      "remain_time": 7,
+      "print_speed_mode": 2,
+      "pause": 0,
+      "project_type": 0,
+      "supplies_usage": 666,
+      "task_settings": []
+    },
+    "features": {
+      "auto_leveling_support": true,
+      "camera_timelapse_support": true,
+      "flow_calibration_support": true,
+      "preheating_support": true
+    },
+    "ip": "192.0.2.10",
+    "model": "Anycubic Kobra X",
+    "printerName": "test-printer",
+    "last_project": null,
+    "urls": {
+      "fileUploadurl": "http://192.0.2.10:18910/gcode_upload",
+      "rtspUrl": "rtsp://192.0.2.10/live"
+    },
+    "version": "1.2.0.2"
+  }
+}

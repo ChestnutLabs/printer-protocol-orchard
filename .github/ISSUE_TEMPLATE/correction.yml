@@ -1,0 +1,72 @@
+name: Correction / fix
+description: Report a wrong or outdated fact in an existing paper.
+title: "[correction] <paper> — <section>"
+labels: ["correction"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Found a fact that's wrong, stale, or misleading? Tell us the paper, the section, and the correct
+        fact with a source. If you cite a capture, sanitize it per
+        [`CLEANROOM-CHECKLIST.md`](../../CLEANROOM-CHECKLIST.md).
+  - type: dropdown
+    id: paper
+    attributes:
+      label: Which paper
+      options:
+        - Anycubic
+        - Bambu
+        - Klipper / Moonraker
+        - Creality
+        - Duet / RRF
+        - Elegoo
+        - FlashForge
+        - Marlin serial
+        - OctoPrint
+        - PrusaLink
+        - Snapmaker
+        - Patterns / cross-cutting
+        - Other (name it below)
+    validations:
+      required: true
+  - type: input
+    id: section
+    attributes:
+      label: Section / heading
+      description: Which section or table the error is in.
+      placeholder: "e.g. Discovery & credentials"
+    validations:
+      required: true
+  - type: textarea
+    id: wrong
+    attributes:
+      label: What's wrong
+      description: Quote or point to the current text and explain the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: correct
+    attributes:
+      label: The correct fact
+      description: What it should say instead.
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Your source
+      description: Which repo/file, vendor doc, or a sanitized capture backs the correct fact.
+    validations:
+      required: true
+  - type: dropdown
+    id: confidence
+    attributes:
+      label: Confidence
+      description: How is this fact established? (see CONFIDENCE.md)
+      options:
+        - 🟢 hardware-validated (observed on a device I own)
+        - 🟡 source-read (read from the vendor's own open-source code)
+        - 🔵 community / reverse-engineering report
+        - ⚪ inferred
+    validations:
+      required: true

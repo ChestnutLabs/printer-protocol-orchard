@@ -1,0 +1,102 @@
+site_name: The Printer Protocol Orchard
+site_description: >-
+  Open research and implementation guidance for the LAN protocols of consumer
+  3D printers.
+site_author: Chestnut Labs
+
+repo_url: https://github.com/ChestnutLabs/printer-protocol-orchard
+repo_name: ChestnutLabs/printer-protocol-orchard
+edit_uri: edit/main/
+
+# CRITICAL: the existing root markdown IS the docs source. Nothing is moved.
+docs_dir: .
+
+# Because docs_dir is the repo root, the build output MUST live outside it — MkDocs
+# refuses to build when site_dir is nested inside docs_dir (it would copy the build
+# into itself). A sibling directory keeps that separation; the Pages workflow uploads
+# this same path.
+site_dir: ../_orchard_site
+
+# Non-page files living under docs_dir are excluded so they are neither rendered as
+# pages nor copied as assets. (Link integrity to fixtures/schemas is gated separately
+# by scripts/check_links.py in CI, so the publish build does not run with --strict.)
+exclude_docs: |
+  CITATION.cff
+  mkdocs.yml
+  requirements*.txt
+  LICENSE
+  scripts/
+  .github/
+  examples/
+  fixtures/
+  schemas/
+  # everything else (the CLEANROOM-CHECKLIST, all protocol/pattern papers) stays a page.
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.suggest
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - tables
+  - pymdownx.highlight
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+
+nav:
+  - Home: README.md
+  - Coverage: COVERAGE.md
+  - Comparison: COMPARISON.md
+  - Protocols:
+      - Overview: protocols/README.md
+      - Anycubic: protocols/anycubic.md
+      - Bambu Lab: protocols/bambu.md
+      - Creality: protocols/creality.md
+      - Duet / RepRapFirmware: protocols/duet.md
+      - Elegoo: protocols/elegoo.md
+      - FlashForge: protocols/flashforge.md
+      - Klipper / Moonraker: protocols/klipper-moonraker.md
+      - Marlin (USB serial): protocols/marlin-serial.md
+      - OctoPrint: protocols/octoprint.md
+      - PrusaLink: protocols/prusalink.md
+      - Snapmaker: protocols/snapmaker.md
+      - Paper template: protocols/_TEMPLATE.md
+  - Patterns:
+      - Overview: patterns/README.md
+      - Connection flows: patterns/connection-flows.md
+      - Discovery & credentials: patterns/discovery-and-credentials.md
+      - Multi-material feeders: patterns/multi-material-feeders.md
+      - Timing normalization: patterns/timing-normalization.md
+  - Reference:
+      - Method: METHOD.md
+      - Glossary: GLOSSARY.md
+      - Confidence grading: CONFIDENCE.md
+      - Licensing: LICENSING.md
+      - Disclaimer: DISCLAIMER.md
+  - Contributing:
+      - How to contribute: CONTRIBUTING.md
+      - Clean-room checklist: CLEANROOM-CHECKLIST.md
+      - Security: SECURITY.md
+      - Code of conduct: CODE_OF_CONDUCT.md
+  - Changelog: CHANGELOG.md

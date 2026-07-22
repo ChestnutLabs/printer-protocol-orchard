@@ -1,0 +1,7 @@
+# Paths the clean-room scanner (scripts/cleanroom_scan.py) skips.
+# One glob per line; '#' starts a comment. A trailing-slash entry skips a whole directory tree.
+#
+# ProjectSource/ is the local-only research / scratch area (git-ignored; see .gitignore). Its
+# contents are never published, so raw/un-sanitized research there is exempt from the repo's
+# clean-room gate. Only work PROMOTED out of ProjectSource into the tracked tree is scanned.
+ProjectSource/

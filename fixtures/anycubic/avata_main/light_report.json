@@ -1,0 +1,15 @@
+{
+  "type": "light",
+  "action": "report",
+  "msgid": "00000000-0000-4000-8000-000000000040",
+  "timestamp": 1780000000400,
+  "data": {
+    "lights": [
+      {
+        "brightness": 100,
+        "status": 1,
+        "type": 0
+      }
+    ]
+  }
+}

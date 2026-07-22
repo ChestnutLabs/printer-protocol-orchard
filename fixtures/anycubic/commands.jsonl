@@ -1,0 +1,13 @@
+{"channel": "web", "type": "light", "action": "control", "data": {"type": 3, "status": 1, "brightness": 100}}
+{"channel": "web", "type": "print", "action": "pause", "data": {"taskid": "-1"}}
+{"channel": "web", "type": "print", "action": "resume", "data": {"taskid": "-1"}}
+{"channel": "web", "type": "print", "action": "stop", "data": {"taskid": "-1"}}
+{"channel": "web", "type": "print", "action": "update", "data": {"taskid": "-1", "settings": {"target_nozzle_temp": 230}}}
+{"channel": "web", "type": "tempature", "action": "set", "data": {"type": 2, "target_hotbed_temp": 60, "target_nozzle_temp": 200}}
+{"channel": "web", "type": "axis", "action": "move", "data": {"axis": 1, "move_type": 1, "distance": 1}}
+{"channel": "web", "type": "axis", "action": "turnOff", "data": null}
+{"channel": "web", "type": "extfilbox", "action": "setInfo", "data": {"type": "PETG", "color": [244, 0, 49]}}
+{"channel": "web", "type": "info", "action": "setPrinterName", "data": {"printerName": "example-printer"}}
+{"channel": "web", "type": "video", "action": "startCapture", "data": null}
+{"channel": "web", "type": "video", "action": "stopCapture", "data": null}
+{"channel": "slicer", "type": "multiColorBox", "action": "getInfo", "data": null}

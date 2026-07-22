@@ -1,0 +1,15 @@
+{
+  "info": {
+    "command": "get_version",
+    "sequence_id": "0",
+    "module": [
+      { "name": "ota", "sw_ver": "01.08.05.00", "hw_ver": "", "sn": "SYNTHETIC-SN-OTA" },
+      { "name": "esp32", "sw_ver": "01.13.20.42", "hw_ver": "AP04", "sn": "SYNTHETIC-SN-AP" },
+      { "name": "mc", "sw_ver": "00.00.30.72", "hw_ver": "MC07", "sn": "SYNTHETIC-SN-MC" },
+      { "name": "th", "sw_ver": "00.00.09.85", "hw_ver": "TH09", "sn": "SYNTHETIC-SN-TH" },
+      { "name": "ams/0", "sw_ver": "00.00.06.96", "hw_ver": "AMS08", "sn": "SYNTHETIC-AMS-SN-0" }
+    ],
+    "result": "success",
+    "reason": ""
+  }
+}
