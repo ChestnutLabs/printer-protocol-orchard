@@ -102,6 +102,7 @@ nav:
   - Contributing:
       - How to contribute: CONTRIBUTING.md
       - Clean-room checklist: CLEANROOM-CHECKLIST.md
+      - For AI agents: AGENTS.md
       - Security: SECURITY.md
       - Code of conduct: CODE_OF_CONDUCT.md
   - Changelog: CHANGELOG.md

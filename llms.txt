@@ -1,0 +1,50 @@
+# The Printer Protocol Orchard
+
+> Open, vendor-neutral, clean-room research on the **LAN control protocols of consumer 3D printers** — transport, discovery, auth, state/read, control/write, multi-material feeders, and quirks, one white paper per printer family. Built so anyone writing an integration (slicer plugin, Home Assistant component, farm manager, dashboard) can start from documented facts instead of reverse-engineering. MIT (code + schemas + fixtures) and CC BY 4.0 (prose).
+
+Every fact carries a confidence tag — 🟢 hardware-validated, 🟡 source-read (from the vendor's own open-source slicer/SDK), 🔵 community/RE, ⚪ inferred. See [CONFIDENCE.md](CONFIDENCE.md). Read `protocols/<vendor>.md` for a family; each opens with an "At a glance" one-page summary. Two operating rules recur across families: **`upload != launch`** (file transfer and print-start are separate operations, often on separate channels) and **almost no family returns a synchronous "print started" ack** — you confirm by watching the status stream transition.
+
+## Protocols (one paper per printer family)
+
+- [Anycubic (Kobra family)](protocols/anycubic.md): per-printer MQTT over TLS `:9883` (client presents a slicer cert; printer server cert not verified) + plain-HTTP `:18910` for identity/file upload; `avata` and `gkapi` dialects share one command set. 🟢 hardware-validated.
+- [Bambu Lab](protocols/bambu.md): MQTT over TLS `:8883` for state/control + implicit FTPS `:990` for the file, both unlocked by LAN mode + a per-device access code; no command ack — confirm via the status stream. 🟢 hardware-validated (A1).
+- [Creality (stock Creality OS)](protocols/creality.md): "three protocols wearing one brand" — the stock bucket is an unauthenticated plain WebSocket `ws://<ip>:9999` carrying `{"method","params"}` with unsolicited pushes, plus no-auth `:80/upload`; route by live firmware, not model name. 🟡 source-read.
+- [Duet3D / RepRapFirmware](protocols/duet.md): one JSON Object Model behind two mutually-exclusive dialects — **standalone** (poll-only `rr_*` HTTP `:80`, no push) and **SBC/DSF** (`/machine/*` REST + one push WebSocket). 🟡 source-read.
+- [Elegoo (Neptune / OrangeStorm / Centauri)](protocols/elegoo.md): a brand over three unrelated LAN stacks — Klipper/Moonraker (Neptune, OrangeStorm), SDCP (Centauri Carbon 1), proprietary MQTT (Centauri Carbon 2); pick the backend by model. 🟡 source-read (SDCP 🔵 community-validated).
+- [FlashForge (Adventurer / Guider)](protocols/flashforge.md): two generations by device fingerprint — newer topic-based pub/sub FlashNetwork SDK (wire encoding lives in a closed DLL; only its surface is knowable), legacy raw-TCP G-code on `:8899`. 🟡 source-read / 🔵 community.
+- [Klipper / Moonraker (generic)](protocols/klipper-moonraker.md): Moonraker's HTTP + WebSocket JSON-RPC API on `:7125` in front of Klipper; the de-facto backbone for a whole family. No fixed schema — enumerate the objects a printer exposes, never assume. 🟡 source-read.
+- [Marlin (USB serial)](protocols/marlin-serial.md): the one non-network paradigm — line G-code streamed over a USB-CDC serial port, one command gated on an `ok`; no discovery/auth/events, all state polled. Gotcha: opening the port reboots the printer. 🟡 source-read.
+- [OctoPrint (host controller)](protocols/octoprint.md): a computer in front of a USB printer — documented HTTP REST `/api/*` on `:5000` + a SockJS push channel; one API key authenticates everything; push-primary with a poll backstop. 🟡 source-read (validatable via the official Docker image + Virtual Printer).
+- [PrusaLink (Prusa host controller)](protocols/prusalink.md): the simplest networked stack — plain-HTTP REST on `:80`, HTTP Digest auth, raw-`PUT` upload, and **no push channel**: poll `GET /api/v1/status` and synthesize change events. 🟡 source-read.
+- [Snapmaker (U1)](protocols/snapmaker.md): underneath it is a Moonraker printer (standard JSON-RPC), with a Snapmaker HTTP control/pairing API on `:8100/api` and toolchanger filament→tool assignment on top. 🟡 source-read.
+- [Paper template](protocols/_TEMPLATE.md): the section skeleton every protocol paper follows.
+
+## Cross-cutting patterns (the same across vendors)
+
+- [Connection & launch flows](patterns/connection-flows.md): the `connect → read → upload → LAUNCH → confirm` sequence per family as Mermaid diagrams; why `upload != launch` and why there's rarely a synchronous ack.
+- [Discovery, LAN mode & credentials](patterns/discovery-and-credentials.md): the small number of onboarding shapes — "cloud off → local access, authenticated by a per-device code."
+- [Multi-material feeders](patterns/multi-material-feeders.md): collapse every vendor AMS/MMU/combiner into one neutral model — an opaque per-slot atom, capability classes keyed on presence not vendor name.
+- [Time & consumption normalization](patterns/timing-normalization.md): convert every time to integer seconds and filament to grams at the adapter edge, so an 11-minute print never shows as 112 hours.
+
+## Landscape & machine-readable
+
+- [Comparison matrix](COMPARISON.md): the whole cross-vendor landscape in one table.
+- [Coverage map](COVERAGE.md): which vendors use which paradigm, documented vs still open.
+- [Schemas](schemas/README.md): machine-readable message/topic/state schemas (JSON Schema) for codegen + validation.
+- [Fixtures](fixtures/README.md): sanitized real wire captures, so a paper is a testable spec (IPs → TEST-NET, ids/credentials redacted).
+- [Glossary](GLOSSARY.md): shared vocabulary (MMU vs toolchanger vs IDEX, feeder classes, poll-synth, …).
+- [Example clients](examples/README.md): minimal reference clients, one per protocol paradigm.
+
+## Method & process
+
+- [Research method](METHOD.md): how to document a printer not yet covered — mine the vendor's own open-source slicer fork for the first-party client.
+- [Confidence grading](CONFIDENCE.md): what each 🟢/🟡/🔵/⚪ tag means and how much to trust it.
+- [Agent guide](AGENTS.md): orientation for AI coding agents working *in* this repo (clean-room rules, validation gates).
+
+## Optional
+
+- [Contributing](CONTRIBUTING.md): how to add a vendor, correct a fact, or land a hardware-validated capture.
+- [Clean-room checklist](CLEANROOM-CHECKLIST.md): the facts-only / no-secrets gate every change must pass.
+- [Licensing](LICENSING.md): MIT + CC BY 4.0, and which covers what.
+- [Disclaimer](DISCLAIMER.md): not affiliated with any manufacturer; not a bypass guide; not a credential store.
+- [Security policy](SECURITY.md): how to report a concern.
