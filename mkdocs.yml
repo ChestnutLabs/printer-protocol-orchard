@@ -62,6 +62,11 @@ markdown_extensions:
       permalink: true
 
 plugins:
+  # same-dir is the purpose-built fix for keeping mkdocs.yml in the same directory
+  # as the docs (docs_dir: .). It patches MkDocs' validation that otherwise aborts
+  # with "docs_dir should not be the parent directory of the config file". Must load
+  # before other plugins.
+  - same-dir
   - search
 
 nav:

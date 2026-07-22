@@ -10,3 +10,8 @@
 
 mkdocs-material>=9.5,<10
 pymdown-extensions>=10.7,<11
+
+# Lets mkdocs.yml live in the same directory as the docs (docs_dir: .) — the
+# purpose-built fix for MkDocs' "docs_dir should not be the parent directory of
+# the config file" error. Enabled via the `same-dir` plugin in mkdocs.yml.
+mkdocs-same-dir>=0.1.3
