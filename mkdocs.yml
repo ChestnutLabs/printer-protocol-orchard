@@ -30,21 +30,39 @@ exclude_docs: |
   examples/
   fixtures/
   schemas/
+  includes/
   # everything else (the CLEANROOM-CHECKLIST, all protocol/pattern papers) stays a page.
 
 theme:
   name: material
+  icon:
+    logo: material/sprout
+    repo: fontawesome/brands/github
   features:
-    - navigation.sections
-    - navigation.top
-    - content.code.copy
+    - navigation.tabs          # top-level sections become a persistent tab bar
+    - navigation.tabs.sticky   # tabs stay pinned when scrolling
+    - navigation.sections      # group items under bold section labels in the sidebar
+    - navigation.indexes       # a section's overview page IS its landing (click the tab)
+    - navigation.top           # back-to-top button
+    - navigation.footer        # prev/next links at the foot of each page
+    - toc.follow               # right-hand TOC tracks scroll on the long papers
     - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.tooltips         # rich hover tooltips (used by the glossary abbreviations)
+    - content.action.edit      # "edit this page" (uses edit_uri)
+    - content.action.view      # "view source"
   palette:
     - scheme: default
+      primary: green
+      accent: teal
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
     - scheme: slate
+      primary: green
+      accent: teal
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode
@@ -52,12 +70,22 @@ theme:
 markdown_extensions:
   - admonition
   - tables
+  - abbr                       # renders *[TERM]: definition as <abbr> hover tooltips
+  - attr_list
   - pymdownx.highlight
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+  # Auto-append the shared glossary abbreviations to every page so domain jargon
+  # (MMU, IDEX, DSF, mTLS, SSDP, …) gets a hover definition site-wide. The file is
+  # excluded from the built site (see exclude_docs) — it is an include, not a page.
+  - pymdownx.snippets:
+      auto_append:
+        - includes/abbreviations.md
+      base_path:
+        - .
   - toc:
       permalink: true
 
@@ -74,7 +102,7 @@ nav:
   - Coverage: COVERAGE.md
   - Comparison: COMPARISON.md
   - Protocols:
-      - Overview: protocols/README.md
+      - protocols/README.md
       - Anycubic: protocols/anycubic.md
       - Bambu Lab: protocols/bambu.md
       - Creality: protocols/creality.md
@@ -88,7 +116,7 @@ nav:
       - Snapmaker: protocols/snapmaker.md
       - Paper template: protocols/_TEMPLATE.md
   - Patterns:
-      - Overview: patterns/README.md
+      - patterns/README.md
       - Connection flows: patterns/connection-flows.md
       - Discovery & credentials: patterns/discovery-and-credentials.md
       - Multi-material feeders: patterns/multi-material-feeders.md
