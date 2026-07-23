@@ -53,7 +53,11 @@
     { "type": "video", "action": "stopCapture",  "channel": "web/printer", "purpose": "Stop camera capture.",  "data": "not-enumerated-in-source" },
 
     { "type": "multiColorBox", "action": "getInfo", "channel": "slicer/printer", "purpose": "Query the ACE multi-material feeder (banks/slots).", "data": "not-enumerated-in-source",
-      "note": "Feeder verb; the ACE (multiColorBox) read shape is documented in the paper's Multi-material section." }
+      "note": "Feeder verb; the ACE (multiColorBox) read shape is documented in the paper's Multi-material section." },
+
+    { "type": "extfilbox", "action": "setInfo", "channel": "web/printer", "purpose": "Set the single external-spool feeder's loaded material + color.",
+      "data": { "type": "string (material name, e.g. \"PETG\")", "color": "array [R, G, B] (0-255)" },
+      "note": "Feeder verb; the single external spool (sibling to multiColorBox). Its reported `loaded` flag doubles as the runout signal — see the paper's Multi-material / feeders section. 🟢 hardware-validated." }
   ],
 
   "queries": {

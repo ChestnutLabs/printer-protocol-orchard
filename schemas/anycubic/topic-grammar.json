@@ -19,7 +19,8 @@
     "sanitized": true,
     "notes": [
       "Values shown are placeholders. `{deviceId}` is device-specific and must be sanitized in any captured example.",
-      "The two Anycubic dialects (avata=Kobra X, gkapi=Kobra 2/3/S1) share this topic grammar; only a few report fields differ."
+      "The two Anycubic dialects (avata=Kobra X, gkapi=Kobra 2/3/S1) share this topic grammar; only a few report fields differ.",
+      "Feeders: `multiColorBox` is the ACE bank-of-slots; `extfilbox` is the single external spool (command verb `extfilbox:setInfo`; reports a `loaded`/runout flag). Both are documented in the paper's Multi-material / feeders section."
     ]
   },
 
@@ -34,7 +35,7 @@
       { "index": 6, "name": "modelId",  "kind": "variable", "examples": ["20030", "20024"], "note": "Numeric model id. 20030=Kobra X (avata); 20024=Kobra 2/3/S1 (gkapi)." },
       { "index": 7, "name": "deviceId", "kind": "variable", "sensitive": true, "note": "Per-device id — sanitize in fixtures/examples." },
       { "index": 8, "name": "msgType",  "kind": "enum", "note": "The MESSAGE/REPORT type — NOT the action verb. The action lives in the payload (see rules).",
-        "values": ["info", "status", "tempature", "fan", "light", "print", "file", "peripherie", "multiColorBox", "response"] }
+        "values": ["info", "status", "tempature", "fan", "light", "print", "file", "peripherie", "multiColorBox", "extfilbox", "response"] }
     ]
   },
 
