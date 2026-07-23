@@ -1,0 +1,300 @@
+/* ============================================================
+   Orchard — a warm chestnut/leaf/paper theme for Material for MkDocs
+   The Printer Protocol Orchard · Chestnut Labs
+   Pair with the palette/scheme names "orchard" and "orchard-dark"
+   in mkdocs.yml (see mkdocs-snippet.yml).
+   ============================================================ */
+
+/* ---------- Light scheme: "orchard" ---------- */
+[data-md-color-scheme="orchard"] {
+  /* header / primary */
+  --md-primary-fg-color:        #5c3620;
+  --md-primary-fg-color--light: #7a4a2b;
+  --md-primary-fg-color--dark:  #462817;
+  --md-primary-bg-color:        #f7f0e4;
+  --md-primary-bg-color--light: #f7f0e4b3;
+  /* accent (hover, focus, active nav) */
+  --md-accent-fg-color:              #55793f;
+  --md-accent-fg-color--transparent: #55793f1a;
+  --md-accent-bg-color:              #f7f0e4;
+  /* canvas + ink */
+  --md-default-bg-color:          #f7f2e9;
+  --md-default-fg-color:          #2e2418de;
+  --md-default-fg-color--light:   #2e2418a6;
+  --md-default-fg-color--lighter: #2e241866;
+  --md-default-fg-color--lightest:#2e24181f;
+  --md-typeset-color:   #33291d;
+  --md-typeset-a-color: #46702f;
+  /* code */
+  --md-code-bg-color: #efe8d8;
+  --md-code-fg-color: #4a3a28;
+  --md-code-hl-color: #c9971f4d;
+  --md-code-hl-keyword-color:  #9a4e20;
+  --md-code-hl-string-color:   #4c7a3d;
+  --md-code-hl-number-color:   #b0541f;
+  --md-code-hl-constant-color: #7a4a2b;
+  --md-code-hl-function-color: #8a6d1c;
+  --md-code-hl-comment-color:  #8b7c66;
+  --md-code-hl-operator-color: #6e5f4e;
+  --md-code-hl-punctuation-color: #6e5f4e;
+  --md-code-hl-name-color:     #4a3a28;
+  /* tables, footer */
+  --md-typeset-table-color: #2e241826;
+  --md-footer-bg-color:       #462817;
+  --md-footer-bg-color--dark: #38200f;
+  --md-footer-fg-color:          #f7f0e4;
+  --md-footer-fg-color--light:   #f7f0e4b3;
+  --md-footer-fg-color--lighter: #f7f0e473;
+}
+
+/* ---------- Dark scheme: "orchard-dark" ---------- */
+[data-md-color-scheme="orchard-dark"] {
+  color-scheme: dark;
+  --md-primary-fg-color:        #2a211a;
+  --md-primary-fg-color--light: #3a2c20;
+  --md-primary-fg-color--dark:  #201913;
+  --md-primary-bg-color:        #ede4d6;
+  --md-primary-bg-color--light: #ede4d6b3;
+  --md-accent-fg-color:              #9fc47f;
+  --md-accent-fg-color--transparent: #9fc47f1a;
+  --md-accent-bg-color:              #201913;
+  --md-default-bg-color:          #201913;
+  --md-default-fg-color:          #ede4d6de;
+  --md-default-fg-color--light:   #ede4d6a6;
+  --md-default-fg-color--lighter: #ede4d666;
+  --md-default-fg-color--lightest:#ede4d61f;
+  --md-typeset-color:   #e6dcca;
+  --md-typeset-a-color: #a4c884;
+  --md-code-bg-color: #181310;
+  --md-code-fg-color: #d8c9b4;
+  --md-code-hl-color: #c9971f40;
+  --md-code-hl-keyword-color:  #d29a6a;
+  --md-code-hl-string-color:   #9fc47f;
+  --md-code-hl-number-color:   #e0a458;
+  --md-code-hl-constant-color: #c98a5e;
+  --md-code-hl-function-color: #d4b46a;
+  --md-code-hl-comment-color:  #7d6f5c;
+  --md-code-hl-operator-color: #a79680;
+  --md-code-hl-punctuation-color: #a79680;
+  --md-code-hl-name-color:     #d8c9b4;
+  --md-typeset-table-color: #ede4d626;
+  --md-footer-bg-color:       #181310;
+  --md-footer-bg-color--dark: #120e0b;
+  --md-footer-fg-color:          #ede4d6;
+  --md-footer-fg-color--light:   #ede4d6b3;
+  --md-footer-fg-color--lighter: #ede4d673;
+  /* admonition/typeset surfaces read better slightly lifted */
+  --md-shadow-z1: 0 4px 10px #0006, 0 0 1px #0009;
+  --md-shadow-z2: 0 4px 10px #0009, 0 0 1px #000;
+}
+
+/* ---------- Header & tabs ---------- */
+.md-header { border-bottom: 3px solid var(--md-accent-fg-color); }
+.md-tabs__link--active { border-bottom: 2px solid var(--md-accent-fg-color); padding-bottom: 2px; }
+
+/* ---------- Typeset polish ---------- */
+.md-typeset h1, .md-typeset h2 { font-weight: 600; letter-spacing: -0.01em; }
+.md-typeset h1 { color: var(--md-typeset-color); }
+.md-typeset table:not([class]) {
+  border: 1px solid var(--md-typeset-table-color);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.md-typeset table:not([class]) th {
+  background: var(--md-code-bg-color);
+  color: var(--md-default-fg-color);
+  font-weight: 600;
+}
+.md-typeset table:not([class]) tbody tr:hover {
+  background: var(--md-accent-fg-color--transparent);
+  box-shadow: none;
+}
+.md-typeset blockquote {
+  border-left: 3px solid var(--md-accent-fg-color);
+  color: var(--md-default-fg-color--light);
+}
+
+/* ---------- Confidence badges ----------
+   Replaces the 🟢🟡🔵⚪ emoji. Requires the attr_list extension:
+     **hardware-validated**{ .conf .conf-hw }
+     **source-read**{ .conf .conf-src }
+     **community / RE**{ .conf .conf-re }
+     **inferred**{ .conf .conf-inf }
+   Bare dot (for dense matrix cells): *●*{ .conf-dot .conf-hw } */
+.md-typeset .conf {
+  display: inline-flex; align-items: center; gap: 0.45em;
+  font-family: var(--md-text-font-family);
+  font-size: 0.62rem; font-weight: 600; line-height: 1;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  padding: 0.3em 0.75em 0.28em;
+  border-radius: 100px;
+  border: 1px solid transparent;
+  vertical-align: 0.1em;
+  white-space: nowrap;
+}
+.md-typeset .conf::before {
+  content: ""; width: 0.55em; height: 0.55em; border-radius: 50%;
+  background: var(--conf-dot, currentColor); flex: none;
+}
+.md-typeset .conf-dot {
+  display: inline-block; width: 0.6em; height: 0.6em; border-radius: 50%;
+  overflow: hidden; color: transparent;
+  background: var(--conf-dot); vertical-align: baseline;
+}
+[data-md-color-scheme="orchard"] .conf-hw  { --conf-dot:#4c7a3d; background:#dfebd5; color:#33591f; border-color:#c4d8b3; }
+[data-md-color-scheme="orchard"] .conf-src { --conf-dot:#c9971f; background:#f3e6c4; color:#6e5313; border-color:#e2cf9c; }
+[data-md-color-scheme="orchard"] .conf-re  { --conf-dot:#4477a5; background:#dce7f0; color:#2d4e6e; border-color:#bfd2e2; }
+[data-md-color-scheme="orchard"] .conf-inf { --conf-dot:#9a8f7e; background:#ece6da; color:#6e6355; border-color:#d6cdbc; }
+[data-md-color-scheme="orchard-dark"] .conf-hw  { --conf-dot:#9fc47f; background:#2c3a22; color:#c3ddab; border-color:#43552f; }
+[data-md-color-scheme="orchard-dark"] .conf-src { --conf-dot:#e0b64a; background:#3d311c; color:#e6cf8f; border-color:#5c4a24; }
+[data-md-color-scheme="orchard-dark"] .conf-re  { --conf-dot:#7fa8cf; background:#22303e; color:#b3cee6; border-color:#35495c; }
+[data-md-color-scheme="orchard-dark"] .conf-inf { --conf-dot:#a79680; background:#332b21; color:#cfc2ad; border-color:#4a4033; }
+
+/* ---------- Landing hero ----------
+   In docs/index.md (attr_list + md_in_html enabled):
+   <div class="orchard-hero" markdown>
+     # The Printer Protocol Orchard
+     Open research and implementation guidance ...
+     [Browse protocols](protocols/){ .md-button .md-button--primary }
+     [Comparison matrix](COMPARISON/){ .md-button }
+   </div> */
+.orchard-hero {
+  margin: 0 0 2rem;
+  padding: 3rem 3rem 2.6rem;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #5c3620 0%, #462817 60%, #3b2818 100%);
+  color: #f7f0e4;
+}
+.orchard-hero h1 {
+  color: #f7f0e4; font-size: 2.2rem; margin: 0 0 0.5rem;
+}
+.orchard-hero p { max-width: 34rem; color: #f7f0e4cc; }
+.orchard-hero .md-button {
+  color: #f7f0e4; border-color: #f7f0e480; margin: 0.6rem 0.6rem 0 0;
+}
+.orchard-hero .md-button--primary {
+  background: #9fc47f; border-color: #9fc47f; color: #2a3a1c;
+}
+.orchard-hero .md-button--primary:hover {
+  background: #b2d494; border-color: #b2d494; color: #2a3a1c;
+}
+[data-md-color-scheme="orchard-dark"] .orchard-hero {
+  background: linear-gradient(135deg, #3a2c20 0%, #2a211a 60%, #24201a 100%);
+}
+
+/* ---------- Card grid (works with Material's grid cards) ---------- */
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid > .card {
+  border: 1px solid var(--md-typeset-table-color);
+  border-radius: 8px;
+  background: var(--md-code-bg-color);
+  transition: border-color 125ms;
+}
+.md-typeset .grid.cards > ul > li:hover,
+.md-typeset .grid > .card:hover {
+  border-color: var(--md-accent-fg-color);
+  box-shadow: none;
+}
+
+/* ---------- Custom home (overrides/home.html) ---------- */
+.orchard-home-hero {
+  background: linear-gradient(150deg, #5c3620 0%, #462817 55%, #35240f 100%);
+  color: #f7f0e4;
+}
+[data-md-color-scheme="orchard-dark"] .orchard-home-hero {
+  background: linear-gradient(150deg, #3a2c20 0%, #2a211a 55%, #201913 100%);
+}
+.orchard-home-hero__inner {
+  max-width: 61rem; margin: 0 auto; padding: 4.4rem 1.2rem 3.2rem;
+}
+.orchard-home-kicker {
+  font-size: 0.68rem; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: #c9a15f; margin: 0 0 0.9rem;
+}
+.orchard-home-hero h1 {
+  color: #f7f0e4; font-size: 2.7rem; font-weight: 700;
+  letter-spacing: -0.02em; line-height: 1.08; max-width: 17ch; margin: 0;
+}
+.orchard-home-lede {
+  font-size: 0.92rem; line-height: 1.6; color: #f7f0e4cc;
+  max-width: 52ch; margin: 1.1rem 0 1.4rem;
+}
+.orchard-home-hero .md-button { color: #f7f0e4; border-color: #f7f0e480; margin: 0 0.6rem 0 0; }
+.orchard-home-hero .md-button--primary { background: #9fc47f; border-color: #9fc47f; color: #2a3a1c; }
+.orchard-home-hero .md-button--primary:hover { background: #b2d494; border-color: #b2d494; color: #2a3a1c; }
+.orchard-home-stats {
+  display: flex; gap: 2.8rem; flex-wrap: wrap;
+  margin-top: 2.4rem; padding-top: 1.4rem; border-top: 1px solid #f7f0e426;
+}
+.orchard-home-stats strong { display: block; font-size: 1.5rem; font-weight: 700; }
+.orchard-home-stats span { font-size: 0.66rem; color: #f7f0e4b3; }
+
+.orchard-home-body { max-width: 61rem; margin: 0 auto; padding: 2.2rem 1.2rem 2.6rem; }
+.orchard-home-body h2 { font-size: 1.2rem; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+.orchard-home-sub { font-size: 0.74rem; color: var(--md-default-fg-color--light); margin: 0.3rem 0 1.1rem; }
+.orchard-family-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.7rem;
+}
+@media (max-width: 59.9375em) { .orchard-family-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 29.9375em) { .orchard-family-grid { grid-template-columns: 1fr; } }
+.orchard-family-card {
+  display: flex; flex-direction: column; gap: 0.2rem;
+  background: var(--md-code-bg-color);
+  border: 1px solid var(--md-typeset-table-color);
+  border-radius: 8px; padding: 0.8rem 0.9rem;
+  color: var(--md-typeset-color) !important;
+  transition: border-color 125ms;
+}
+.orchard-family-card:hover { border-color: var(--md-accent-fg-color); }
+.orchard-family-card__row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-weight: 600; font-size: 0.76rem; color: var(--md-primary-fg-color--light);
+}
+[data-md-color-scheme="orchard-dark"] .orchard-family-card__row { color: #d29a6a; }
+.orchard-family-card__tag {
+  font-size: 0.6rem; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--md-default-fg-color--light);
+}
+.orchard-family-card--open { border-style: dashed; border-color: #c9a15f; }
+.orchard-family-card--open .orchard-family-card__tag { text-transform: none; letter-spacing: 0; font-size: 0.64rem; }
+.orchard-family-card .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.dot-hw { background: #4c7a3d; } .dot-src { background: #c9971f; }
+[data-md-color-scheme="orchard-dark"] .dot-hw { background: #9fc47f; }
+[data-md-color-scheme="orchard-dark"] .dot-src { background: #e0b64a; }
+
+.orchard-sourcing {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6rem;
+  background: var(--md-code-bg-color);
+  border: 1px solid var(--md-typeset-table-color);
+  border-radius: 10px; padding: 1.4rem 1.6rem; margin: 1.8rem 0;
+}
+@media (max-width: 44.9375em) { .orchard-sourcing { grid-template-columns: 1fr; } }
+.orchard-sourcing em {
+  display: block; font-style: normal; font-family: var(--md-code-font-family);
+  font-size: 0.66rem; font-weight: 600; color: #8a6d1c;
+}
+[data-md-color-scheme="orchard-dark"] .orchard-sourcing em { color: #d4b46a; }
+.orchard-sourcing strong { display: block; font-size: 0.78rem; margin: 0.3rem 0 0.2rem; }
+.orchard-sourcing span { font-size: 0.68rem; line-height: 1.55; color: var(--md-default-fg-color--light); }
+
+.orchard-home-bands { display: grid; grid-template-columns: 1.5fr 1fr; gap: 1rem; }
+@media (max-width: 44.9375em) { .orchard-home-bands { grid-template-columns: 1fr; } }
+.orchard-legend-band {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem;
+  background: var(--md-default-bg-color);
+  border: 1px solid var(--md-typeset-table-color);
+  border-radius: 10px; padding: 1rem 1.2rem;
+}
+.orchard-legend-band__label {
+  flex-basis: 100%; font-size: 0.62rem; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--md-default-fg-color--light); margin-bottom: 0.3rem;
+}
+.orchard-contribute-band {
+  display: flex; flex-direction: column; justify-content: center; gap: 0.2rem;
+  background: #3b4d2c; border-radius: 10px; padding: 1rem 1.2rem;
+  color: #e9f2dd !important;
+}
+.orchard-contribute-band:hover { background: #45592f; }
+.orchard-contribute-band strong { font-size: 0.8rem; }
+.orchard-contribute-band span { font-size: 0.68rem; line-height: 1.55; color: #e9f2ddb3; }

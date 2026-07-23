@@ -1,3 +1,10 @@
+---
+template: home.html
+hide:
+  - navigation
+  - toc
+---
+
 # The Printer Protocol Orchard
 
 **Open, vendor-neutral, clean-room research on the LAN control protocols of consumer 3D printers** — so anyone building

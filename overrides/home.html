@@ -1,0 +1,75 @@
+{#- Orchard custom home page — Material for MkDocs template override.
+    Enable with `custom_dir: overrides` in mkdocs.yml and, in index.md
+    front matter:
+      ---
+      template: home.html
+      hide: [navigation, toc]
+      ---
+    Body content of index.md is ignored; edit this template instead. -#}
+{% extends "main.html" %}
+
+{% block tabs %}
+{{ super() }}
+<section class="orchard-home-hero">
+  <div class="orchard-home-hero__inner">
+    <p class="orchard-home-kicker">Open protocol research · Chestnut Labs</p>
+    <h1>Every printer speaks a different dialect. We wrote them down.</h1>
+    <p class="orchard-home-lede">Implementation-grade white papers on the LAN control protocols of
+      consumer 3D printers — clean-room, confidence-graded, vendor-neutral.
+      Skip the reverse-engineering; start from documented facts.</p>
+    <p>
+      <a href="{{ 'protocols/' | url }}" class="md-button md-button--primary">Find your printer</a>
+      <a href="{{ 'COMPARISON/' | url }}" class="md-button">Comparison matrix</a>
+    </p>
+    <div class="orchard-home-stats">
+      <div><strong>11</strong><span>protocol families</span></div>
+      <div><strong>4</strong><span>cross-cutting patterns</span></div>
+      <div><strong>2</strong><span>hardware-validated benches</span></div>
+      <div><strong>MIT</strong><span>+ CC BY 4.0</span></div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block site_nav %}{% endblock %}
+
+{% block content %}
+<div class="orchard-home-body">
+  <h2>The orchard</h2>
+  <p class="orchard-home-sub">One white paper per printer family — transport, discovery, auth, control, feeders, quirks.</p>
+  <div class="orchard-family-grid">
+    <a href="{{ 'protocols/anycubic/' | url }}" class="orchard-family-card"><span class="orchard-family-card__row">Anycubic <i class="dot dot-hw"></i></span><span class="orchard-family-card__tag">Proprietary LAN</span></a>
+    <a href="{{ 'protocols/bambu/' | url }}" class="orchard-family-card"><span class="orchard-family-card__row">Bambu Lab <i class="dot dot-hw"></i></span><span class="orchard-family-card__tag">Proprietary LAN</span></a>
+    <a href="{{ 'protocols/creality/' | url }}" class="orchard-family-card"><span class="orchard-family-card__row">Creality <i class="dot dot-src"></i></span><span class="orchard-family-card__tag">Proprietary LAN</span></a>
+    <a href="{{ 'protocols/duet/' | url }}" class="orchard-family-card"><span class="orchard-family-card__row">Duet / RRF <i class="dot dot-src"></i></span><span class="orchard-family-card__tag">Object-model</span></a>
+    <a href="{{ 'protocols/elegoo/' | url }}" class="orchard-family-card"><span class="orchard-family-card__row">Elegoo <i class="dot dot-src"></i></span><span class="orchard-family-card__tag">Mixed · 3 stacks</span></a>
+    <a href="{{ 'protocols/flashforge/' | url }}" class="orchard-family-card"><span class="orchard-family-card__row">FlashForge <i class="dot dot-src"></i></span><span class="orchard-family-card__tag">Proprietary LAN</span></a>
+    <a href="{{ 'protocols/klipper-moonraker/' | url }}" class="orchard-family-card"><span class="orchard-family-card__row">Klipper / Moonraker <i class="dot dot-src"></i></span><span class="orchard-family-card__tag">Moonraker</span></a>
+    <a href="{{ 'protocols/marlin-serial/' | url }}" class="orchard-family-card"><span class="orchard-family-card__row">Marlin (USB) <i class="dot dot-src"></i></span><span class="orchard-family-card__tag">USB serial</span></a>
+    <a href="{{ 'protocols/octoprint/' | url }}" class="orchard-family-card"><span class="orchard-family-card__row">OctoPrint <i class="dot dot-src"></i></span><span class="orchard-family-card__tag">Host controller</span></a>
+    <a href="{{ 'protocols/prusalink/' | url }}" class="orchard-family-card"><span class="orchard-family-card__row">PrusaLink <i class="dot dot-src"></i></span><span class="orchard-family-card__tag">Host controller</span></a>
+    <a href="{{ 'protocols/snapmaker/' | url }}" class="orchard-family-card"><span class="orchard-family-card__row">Snapmaker U1 <i class="dot dot-src"></i></span><span class="orchard-family-card__tag">Moonraker + wrapper</span></a>
+    <a href="{{ 'METHOD/' | url }}" class="orchard-family-card orchard-family-card--open"><span class="orchard-family-card__row">Your printer?</span><span class="orchard-family-card__tag">METHOD.md shows how to research it — PRs welcome.</span></a>
+  </div>
+
+  <div class="orchard-sourcing">
+    <div><em>01</em><strong>Mined from first-party source</strong><span>Nearly every vendor ships an open-source slicer fork — its device code is the authoritative client.</span></div>
+    <div><em>02</em><strong>Clean-room, facts only</strong><span>Uncopyrightable interface facts plus sanitized wire captures — never copied code, never credentials.</span></div>
+    <div><em>03</em><strong>Confidence-graded</strong><span>Every fact carries a tag — trust accordingly, and see exactly which capture would close a gap.</span></div>
+  </div>
+
+  <div class="orchard-home-bands">
+    <div class="orchard-legend-band">
+      <span class="orchard-legend-band__label">Every fact is tagged</span>
+      <span class="conf conf-hw">hardware-validated</span>
+      <span class="conf conf-src">source-read</span>
+      <span class="conf conf-re">community / RE</span>
+      <span class="conf conf-inf">inferred</span>
+    </div>
+    <a href="{{ 'CONTRIBUTING/' | url }}" class="orchard-contribute-band">
+      <strong>Close a gap</strong>
+      <span>Hardware-validated captures that promote a source-read fact are the highest-value contribution.</span>
+    </a>
+  </div>
+</div>
+{% endblock %}
