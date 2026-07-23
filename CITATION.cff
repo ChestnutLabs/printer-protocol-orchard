@@ -12,7 +12,9 @@ authors:
   - name: "Chestnut Labs"
 repository-code: "https://github.com/ChestnutLabs/printer-protocol-orchard"
 url: "https://github.com/ChestnutLabs/printer-protocol-orchard"
-license: MIT
+license:
+  - MIT
+  - CC-BY-4.0
 keywords:
   - 3d-printing
   - protocols

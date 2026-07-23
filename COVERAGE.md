@@ -6,7 +6,9 @@ cluster.
 
 Status: 🟢 hardware-validated · 🟡 source-read · 🔵 community/RE · ✏️ paper published, hardware-validation welcome · ⬜ not yet started.
 
-> **Every family below now has a paper in [`protocols/`](protocols/README.md).** Anycubic + Bambu are 🟢
+> **Every family below is covered by a paper in [`protocols/`](protocols/README.md)** — often a shared one, since
+> vendor variants fold into a paradigm paper (e.g. Qidi/Sovol → `klipper-moonraker.md`) rather than getting their own.
+> Anycubic + Bambu are 🟢
 > hardware-validated; the rest are 🟡 source-read (wire-shape from the vendor's own slicer/SDK/docs, not yet confirmed
 > on hardware). A 🟢 capture that promotes a 🟡 paper is the highest-value contribution — each paper's *Confidence &
 > validation* section lists the exact open gaps.
@@ -29,8 +31,8 @@ plus a thin vendor auth/bootstrap wrapper.
 ### Proprietary LAN (vendor-specific wire)
 | Family | Wire | Status |
 |--------|------|--------|
-| Bambu Lab (X1/P1/A1/H2D) | MQTT (TLS) + FTPS, `bblp`+access-code, LAN mode | ✏️ |
-| Anycubic (Kobra series) | MQTT (TLS, slicer mTLS cert) + HTTP `:18910` identity/upload | ✏️ |
+| Bambu Lab (X1/P1/A1/H2D) | MQTT (TLS) + FTPS, `bblp`+access-code, LAN mode | 🟢 |
+| Anycubic (Kobra series) | MQTT (TLS, slicer mTLS cert) + HTTP `:18910` identity/upload | 🟢 |
 | Creality (stock OS: K1/K2/Ender-3 V3) | HTTP `:80/upload` + `ws://:9999` `{method:set/get}` + UDP-broadcast discovery | ✏️ |
 | Elegoo Centauri (SDCP) | SDCP over WebSocket `:3030` + UDP discovery; CC2 over MQTT+HTTP | ✏️ |
 | FlashForge (5M/AD5X/Guider) | Proprietary "FlashNetwork" SDK (topic pub/sub + check-code); legacy `:8899` raw-TCP G-code | ✏️ |
@@ -61,7 +63,7 @@ AFC) over Klipper/Moonraker. Retrofit combiners (CoPrint) and splicers (Palette)
 
 ## Contributing coverage
 
-The floor is laid — every family has a paper. The frontier now is **hardware validation** (promote a 🟡 source-read
+The floor is laid — every family is covered by a paper. The frontier now is **hardware validation** (promote a 🟡 source-read
 paper to 🟢 with a real capture) and **new families** not yet mapped (⬜). A 🟢 capture for any 🟡 family is the
 single highest-value contribution. Add a new printer via [`protocols/_TEMPLATE.md`](protocols/_TEMPLATE.md) and the
 [`METHOD.md`](METHOD.md).

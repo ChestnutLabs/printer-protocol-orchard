@@ -21,6 +21,11 @@ on:
   push:
   pull_request:
 
+# Read-only: the job only runs stdlib verification scripts — it never writes to
+# the repo, so drop every default GITHUB_TOKEN permission except reading contents.
+permissions:
+  contents: read
+
 jobs:
   verify:
     runs-on: ubuntu-latest

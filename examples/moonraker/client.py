@@ -36,7 +36,13 @@ QUERY_OBJECTS = ["print_stats", "heater_bed", "extruder", "toolhead", "virtual_s
 
 
 def _base(host: str) -> str:
-    return host if host.startswith("http") else f"http://{host}"
+    """HTTP base URL for `host` (`ip`, `ip:port`, or a full URL). The default
+    Moonraker port :7125 is appended ONLY when the caller gave no port — a vendor
+    fork (e.g. Creality K2) may answer on another port, so an explicit one wins.
+    Mirrors the port handling in subscribe_ws()."""
+    url = host if host.startswith("http") else f"http://{host}"
+    netloc = url.split("://", 1)[1]
+    return url if ":" in netloc else f"{url}:7125"
 
 
 def _headers() -> dict:
@@ -46,7 +52,7 @@ def _headers() -> dict:
 
 def printer_info(host: str) -> dict:
     """GET /printer/info — answers only when Klippy is connected."""
-    r = requests.get(f"{_base(host)}:7125/printer/info", headers=_headers(), timeout=10)
+    r = requests.get(f"{_base(host)}/printer/info", headers=_headers(), timeout=10)
     r.raise_for_status()
     return r.json().get("result", {})
 
@@ -54,7 +60,7 @@ def printer_info(host: str) -> dict:
 def query_state(host: str, objects) -> dict:
     """One-shot GET /printer/objects/query?print_stats&heater_bed&... ."""
     qs = "&".join(objects)
-    url = f"{_base(host)}:7125/printer/objects/query?{qs}"
+    url = f"{_base(host)}/printer/objects/query?{qs}"
     r = requests.get(url, headers=_headers(), timeout=10)
     r.raise_for_status()
     return r.json().get("result", {}).get("status", {})
@@ -97,7 +103,7 @@ def upload_and_print(host: str, path: str, start: bool) -> dict:
     with open(path, "rb") as fh:
         files = {"file": (name, fh)}
         data = {"print": "true"} if start else {}
-        r = requests.post(f"{_base(host)}:7125/server/files/upload",
+        r = requests.post(f"{_base(host)}/server/files/upload",
                           headers=_headers(), files=files, data=data, timeout=60)
     r.raise_for_status()
     return r.json()

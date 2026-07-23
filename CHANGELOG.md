@@ -16,8 +16,8 @@ First public cut of the Orchard.
 - **11 protocol papers** covering consumer 3D-printer LAN control, each with
   per-fact confidence tags: Anycubic and Bambu hardware-validated (🟢), the
   remaining nine (Klipper/Moonraker, Elegoo, OctoPrint, Duet/RepRapFirmware,
-  Creality, Snapmaker, FlashForge, Marlin USB-serial, and the shared
-  multi-material feeder family) source-read (🟡).
+  Creality, Snapmaker, FlashForge, Marlin USB-serial, and PrusaLink)
+  source-read (🟡).
 - **Cross-cutting patterns set** distilling behavior common to many families:
   poll/timing cadence, multi-material feeder models, discovery and credential
   mechanisms, and connection/handshake flows.
