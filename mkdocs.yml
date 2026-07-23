@@ -25,6 +25,10 @@ exclude_docs: |
   mkdocs.yml
   requirements*.txt
   LICENSE
+  /README.md
+  # ^ the ROOT README is the GitHub landing page; the site home is the card hub in
+  #   index.md. The leading slash anchors this to the repo root so the section-index
+  #   READMEs (protocols/README.md, patterns/README.md) are NOT also excluded.
   scripts/
   .github/
   examples/
@@ -72,6 +76,7 @@ markdown_extensions:
   - tables
   - abbr                       # renders *[TERM]: definition as <abbr> hover tooltips
   - attr_list
+  - md_in_html                 # lets Markdown render inside the landing-page grid cards
   - pymdownx.highlight
   - pymdownx.superfences:
       custom_fences:
@@ -88,6 +93,13 @@ markdown_extensions:
         - .
   - toc:
       permalink: true
+      # GitHub-compatible heading slugs (does NOT collapse the double hyphens that
+      # come from `/` and `&`), so an anchor like #faults--hms resolves the same on
+      # the rendered site as it does in the raw Markdown on GitHub. Kept in sync with
+      # the slug algorithm in scripts/check_links.py.
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
 
 plugins:
   # same-dir is the purpose-built fix for keeping mkdocs.yml in the same directory
@@ -98,7 +110,7 @@ plugins:
   - search
 
 nav:
-  - Home: README.md
+  - Home: index.md
   - Coverage: COVERAGE.md
   - Comparison: COMPARISON.md
   - Protocols:
