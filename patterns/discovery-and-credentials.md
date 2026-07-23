@@ -30,6 +30,7 @@ principle: user-owned, never bundled.
 ## 3. Discovery: usually manual IP, sometimes a broadcast
 
 In rough order of what you'll actually find:
+
 - **Manual IP entry** — always works; the universal fallback. Many brands support *only* this.
 - **UDP broadcast** — a vendor-specific discovery packet on the LAN; the printer replies with its IP/identity.
 - **SSDP / mDNS** — some stacks (and Moonraker printers) answer standard discovery.

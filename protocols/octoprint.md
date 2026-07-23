@@ -58,6 +58,7 @@ controller**; you drive its API and treat the machine underneath as secondary me
 first-class, always-works path.** See [`../patterns/discovery-and-credentials.md`](../patterns/discovery-and-credentials.md).
 
 **Identity endpoints:**
+
 - `GET /api/version` → `{ api, server, text }`. `server` is the OctoPrint semver (e.g. `1.11.8`); **`text` carries the
   literal `"OctoPrint <version>"`** — the `"OctoPrint "` prefix is the positive genuineness tell. 🟡
 - `GET /api/server` → `{ version, safemode }` (present from **≥1.5.0**; `safemode` names the reason it booted into safe
@@ -111,6 +112,7 @@ plugins }`; `history` is the one-time backlog on connect, `current` is the live 
 the `auth` frame. 🟡
 
 **Poll surface** (same data as the pushes):
+
 - `GET /api/printer` → `{ temperature:{ tool0:{actual,target,offset}, tool1…, bed, chamber, history? }, sd:{ready},
   state:{ text, flags, error? } }`. **Returns `409` when the printer is not operational** — treat that as a valid
   **"not connected"** signal, not a transport failure. 🟡
@@ -143,6 +145,7 @@ set — confirm which a live instance emits)*
 present only if the profile has a heated chamber. 🟡
 
 **Progress & timing** *(the load-bearing traps — see [`../patterns/timing-normalization.md`](../patterns/timing-normalization.md)):*
+
 - **`progress.completion` is a fraction `0.0–1.0`** (a real docs example is `0.2298…`) — **multiply by 100** for a
   percent bar; do **not** treat it as already-percent. One live-confirm remains open. 🟡
 - **It is file-byte position** (`filepos/size`), **not time-based** → extrapolating an ETA from it is
@@ -198,6 +201,7 @@ part **`file`** plus flag fields: `path` (subfolder), `select` (bool, default `f
 folder — mutually exclusive with it). 🟡
 
 Response is **`201`** `{ files:{ local:{…}, sdcard? }, folder?, done, effectiveSelect, effectivePrint }`:
+
 - `done` is `false` while an **SD stream** is still in progress (final completion arrives via SockJS).
 - **`effectiveSelect`/`effectivePrint` echo what actually happened** — a `print=true` the printer could not honor comes
   back `false`. **Always read them back.** 🟡
@@ -206,6 +210,7 @@ Response is **`201`** `{ files:{ local:{…}, sdcard? }, folder?, done, effectiv
   model types are slicer-plugin dependent) · `500`.
 
 Two launch flows:
+
 1. **Upload-and-hold (recommended):** upload with `select=false, print=false` → `201`; later select
    `POST /api/files/{location}/{path} {command:"select", print:false}` → `204`; then `POST /api/job {command:"start"}`
    → `204`. This lets a client verify the stored file and keep its own job record authoritative.

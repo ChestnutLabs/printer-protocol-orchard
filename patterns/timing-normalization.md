@@ -26,6 +26,7 @@ The most dangerous trap, because a `0–100` field *looks* interchangeable but i
 | **File-byte position** | fraction of the *g-code file* streamed | ❌ **systematically wrong near the end** (the last few % of a file can be a large chunk of the *time*) |
 
 Which brands are which (see the per-family papers for the exact fields):
+
 - **Time-based** ✅ — Anycubic (`progress`), Bambu (`mc_percent`), PrusaLink (`job.progress`), Elegoo SDCP (`Progress`,
   read verbatim).
 - **File-byte** ⚠️ — Klipper/Moonraker (`virtual_sdcard.progress`), OctoPrint (`completion` = `filepos/size`), Duet/RRF
@@ -34,6 +35,7 @@ Which brands are which (see the per-family papers for the exact fields):
   Klipper-based, so treat it as file-byte until a capture proves otherwise.
 
 **Remaining-time source precedence** (fall through on absence):
+
 1. A **firmware-reported "time remaining"** — best; already reflects live speed/pauses.
 2. **`estimate − elapsed`** — when the file metadata carries a total estimate.
 3. **Time-based extrapolation** `elapsed/progress − elapsed` — **only** with *time-based* progress; **never** with

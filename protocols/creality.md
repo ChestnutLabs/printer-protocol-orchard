@@ -75,7 +75,7 @@ secondary beacon on UDP `:5353`. 🟡 (vendor slicer) / 🔵 (the `:5353` note)
 It is cheap — read it before committing to a session. 🟡
 
 **Fingerprint (which bucket?):**
-```
+```text
 if  standard Moonraker answers on tcp:7125  →  ROOTED (bucket C)  → see klipper-moonraker.md
 elif tcp:9999 accepts a plain WS upgrade    →  STOCK  (bucket B)  → this paper
 else                                        →  not LAN-networked (bucket A / offline)
@@ -181,6 +181,7 @@ explicit "enable" and validate against your own device before trusting them.
 > Contrast a typed emergency-stop verb on documented stacks.
 
 **Print launch (two-step):** 🟡
+
 1. **Upload** — `POST http://<ip>:80/upload/<url-encoded name>` (multipart or raw body), **no auth**, `200/201` = ok,
    accepts `.gcode` / `.gcode.3mf`. (Legacy machines FTP-push instead; a `:81 /server/files/upload` alternate is also
    present in vendor source — probe on hardware.) **Upload ≠ start.**
@@ -200,6 +201,7 @@ the feeder spectrum: per-slot remaining **%** *and* **RFID** *and* per-box **dry
 [`../patterns/multi-material-feeders.md`](../patterns/multi-material-feeders.md) for the neutral model. 🟡
 
 **Read shape** — `boxsInfo.materialBoxs[]`, each unit carrying:
+
 - `box_type` — ⚠️ **three-valued**: `0` = normal 4-slot CFS, `1` = extra box (variable slots), `2` = mini / **single-
   slot** CFS. **Do not hardcode 4 slots** — key the slot count off `box_type`.
 - `cfsName` (a per-unit label), and per-box **`temp` + `humidity`** (dry-box telemetry).
@@ -251,6 +253,7 @@ print-time-slot-map section. 🟡
   ([`klipper-moonraker.md`](klipper-moonraker.md)). **Bucket A (Marlin/USB)** is [`marlin-serial.md`](marlin-serial.md).
 
 **Open gaps — the capture that closes each** (a hardware-owner's highest-value contribution):
+
 - Does a real K1/KE **accept the print-start frame**, and how does the file-readiness transition sequence? → capture an
   upload → launch on a stock K1/KE.
 - **Fine labels for `state` 6/7/8** → capture the `state`/`deviceState` stream across idle → print → pause → complete →

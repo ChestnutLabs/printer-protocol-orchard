@@ -18,6 +18,7 @@ slicer repo — better than community reverse-engineering, and legally clean (yo
 uncopyrightable interface facts; you never copy it).
 
 The three places the protocol lives:
+
 1. **Device-connection C++** — `src/slic3r/GUI/<Vendor>/…`, `SendToPrinter`, `DeviceManager`, `print_manage/`,
    `mqtt_client`, the `send_gcode`/`send_print` bridges.
 2. **A committed device bundle** — a webview/UI bundle under `resources/web/…` (the actual wire logic often lives here,
@@ -49,6 +50,7 @@ git sparse-checkout set src/slic3r/GUI src/slic3r/Utils resources/web doc docs
 git ls-tree -r --name-only HEAD | grep -iE 'GUI/[A-Z][a-z]+/|print_manage|SendToPrinter|device|resources/web|deps/.*link'
 ```
 The device layer's **format varies by vendor** — expect one of:
+
 - a **Vue/JS webview** bundle (`resources/web/<panel>/assets/*.js`),
 - a **compiled Flutter** app (`resources/web/flutter_web/main.dart.js`),
 - a **separate C++ SDK** dependency (no web bundle at all),
@@ -69,6 +71,7 @@ catalog**. Quote the exact strings you find.
 ### 5. Screen by G-code flavor first
 The vendor's machine profiles (`resources/profiles/<Vendor>/machine/*.json`) carry `gcode_flavor` and start-gcode.
 That's a fast paradigm classifier before you read a line of device code:
+
 - `klipper` + `PRINT_START`/`SET_*` macros → it's **Moonraker/Klipper** underneath; look for `/server/…` and
   `printer.objects` (often you're 80% done — it's the common stack).
 - `reprapfirmware` / `host_type: duet` → **RRF Object Model** (`rr_*` / DSF).
@@ -82,6 +85,7 @@ That's a fast paradigm classifier before you read a line of device code:
 A slicer knows *assignment* (tool offsets, the color→slot map, print modes) but not the *mechanism* (dock/undock,
 carriage modes, load/unload macros). For those, the authoritative first-party source is the **firmware's config schema
 / object model**, read the same clone-and-grep way:
+
 - **Klipper** — the config reference + the module source (`[dual_carriage]` for IDEX, community `[toolchanger]`/KTC,
   MMU drivers like Happy Hare / AFC).
 - **RepRapFirmware** — the Object Model dictionary (`tools[]`, `move.axes`, `job.timesLeft`).

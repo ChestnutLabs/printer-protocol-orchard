@@ -67,6 +67,7 @@ origin they are served from, *not* auto-discovery. When present, discovery is a 
 - **SSDP:** device type `urn:arksine.github.io:device:Moonraker:1` on `239.255.255.250:1900`; **off unless enabled**.
 
 **Identity probes** (read these before committing to a session):
+
 - `GET /server/info` — `klippy_connected`, `klippy_state` (`disconnected|startup|ready|error|shutdown`),
   `moonraker_version`, `api_version`, `components[]`. 🟡
 - `GET /printer/info` — **only answers when Klippy is connected**: `state`, `hostname`, `klipper_path`, `config_file`,

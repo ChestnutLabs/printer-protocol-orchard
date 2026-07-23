@@ -18,6 +18,7 @@ Status: 🟢 hardware-validated · 🟡 source-read · 🔵 community/RE · ✏�
 ### Moonraker / Klipper (HTTP `:7125` + WebSocket JSON-RPC)
 The backbone. If a printer exposes Moonraker, it speaks a common, well-understood protocol regardless of brand — often
 plus a thin vendor auth/bootstrap wrapper.
+
 | Family | Notes | Status |
 |--------|-------|--------|
 | Generic Klipper/Moonraker | The reference; `printer.objects.subscribe`, `printer.print.*`, `/server/files/upload` | ✏️ |

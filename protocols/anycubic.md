@@ -40,6 +40,7 @@ UUIDv4; `timestamp` is epoch **milliseconds**. 🟢
 
 **Topic grammar:** `anycubic/anycubicCloud/v1/<channel>/<modelId>/<deviceId>/<msgType>` — **the action is in the
 payload, not the topic** (see the gotcha above). Channels:
+
 | Channel | Use |
 |---------|-----|
 | `slicer/printer` | slice/launch flow — `print:start`, `multiColorBox:getInfo` |
@@ -63,6 +64,7 @@ report's `urls.fileUploadurl` instead); gkapi advertises it.
 ## Credentials / auth
 
 Two credentials, both user-owned:
+
 1. **The mTLS client cert/key** live inside the user's own Anycubic slicer (`cloud_mqtt.dll` in the slicer install).
    *This orchard documents that they live there; it never ships them.* An integration extracts them from the user's own
    installation. 🟡
@@ -97,6 +99,7 @@ Command verbs (exact `type:action`) — all on `web/printer` unless noted:
 `video:startCapture/stopCapture`, plus the feeder verbs below. 🟢
 
 **Print launch (two-step):** 🟢
+
 1. multipart `POST <fileUploadurl>` with the file field `gcode`, a `filename` field, and header **`X-File-Length:
    <raw byte length>`**. Must be a real `.gcode.3mf`. Success = `{"code":200,"data":{"gcode":<stored_name>}}`.
 2. MQTT `print:start` on `slicer/printer` referencing the uploaded file (payload carries `filename`, `md5`, and an

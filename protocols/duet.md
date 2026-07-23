@@ -147,14 +147,25 @@ a generic drop. (`GET /machine/model` returns the whole tree as a poll fallback 
 `disconnected · starting · updating · off · halted · pausing · paused · resuming · cancelling · processing ·
 simulating · busy · changingTool · idle`
 
-A reasonable native→normalized mapping: `idle`→idle; **`processing`→printing** (the printing state — *not* a value
-named `printing`); `simulating`→printing (a dry-run for timing — flag it, don't count it as a physical print);
-`paused`→paused, `pausing`/`resuming`/`cancelling`→transient; `changingTool`→busy (+ a toolchange sub-state, below);
-`busy`→busy (homing/macro/motion, not a print); `starting`/`updating`→connecting/busy (boot / firmware flash);
-`halted`→error (emergency-stopped after `M112`; recover with `M999`); `off`→offline; `disconnected` is a client
-pseudo-status RRF doesn't emit. **There is no distinct `completed` value** — a job returning to `idle` (with the
-just-finished job's terminal flags set: cancelled / aborted / simulated) is how completion is inferred. An unlisted
-value should degrade to busy/unknown, never raise. 🟡/⚪
+A reasonable native→normalized mapping:
+
+| `state.status` | Normalized | Notes |
+|----------------|------------|-------|
+| `idle` | idle | |
+| `processing` | **printing** | the printing state — *not* a value named `printing` |
+| `simulating` | printing | a dry-run for timing — flag it, don't count it as a physical print |
+| `paused` | paused | |
+| `pausing` / `resuming` / `cancelling` | transient | |
+| `changingTool` | busy | + a toolchange sub-state, below |
+| `busy` | busy | homing/macro/motion, not a print |
+| `starting` / `updating` | connecting/busy | boot / firmware flash |
+| `halted` | error | emergency-stopped after `M112`; recover with `M999` |
+| `off` | offline | |
+| `disconnected` | — | a client pseudo-status RRF doesn't emit |
+
+**There is no distinct `completed` value** — a job returning to `idle` (with the just-finished job's terminal flags
+set: cancelled / aborted / simulated) is how completion is inferred. An unlisted value should degrade to busy/unknown,
+never raise. 🟡/⚪
 
 **Temperatures — °C, but behind an index dereference.** RRF separates **heaters** (physical channels) from their
 **roles**. `heat.heaters[i]` carries `current`, `active` (setpoint), `standby` (setpoint), `state`

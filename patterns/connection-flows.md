@@ -418,4 +418,3 @@ sequenceDiagram
 4. **Every credential is a mechanism** the owner supplies at runtime (Bambu/Elegoo-CC2 access code, Moonraker/OctoPrint
    API key, Duet machine password) or imports from their own tooling (Anycubic mTLS cert) — never bundled. SDCP and stock
    Creality `:9999` are unauthenticated LAN-trust with nothing to obtain.
-```

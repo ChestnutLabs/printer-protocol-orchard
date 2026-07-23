@@ -27,6 +27,7 @@ they expose (see below).
 ### A. Vendor AMS-class units — per-slot state on the vendor wire
 Bambu AMS, Anycubic ACE, Elegoo CANVAS, Creality CFS, FlashForge Material Station. They report slots directly on their
 LAN protocol, but with very different **richness**:
+
 - **Rich:** Bambu AMS (per-slot RFID uuid, remaining grams + %, sku) and Creality CFS (per-slot %).
 - **Identity-only:** Anycubic ACE (sku/color/weight on LAN; **brand/RFID only over USB**, not the wire).
 - **Sparse (the outlier that proves invariant #1):** Elegoo CANVAS reports color/material but **zero remaining
@@ -34,6 +35,7 @@ LAN protocol, but with very different **richness**:
 
 ### B. DIY / open MMUs — a software *provider* over Klipper/Moonraker
 ERCF, Box Turtle, Night Owl, TradRack, QuattroBox, 3MS, and more. **Detect the software provider, not the hardware:**
+
 - **Happy Hare** is the dominant provider — one Klipper object (`printer.mmu`) fronts most open MMUs (ERCF, Box Turtle,
   Night Owl, TradRack, 3MS, …). Read *that* and you cover the whole family at once.
 - **AFC (Armored Turtle)** is a *second, Happy-Hare-incompatible* provider (Box Turtle's native software) that
@@ -60,6 +62,7 @@ it's what tells you *which physical filament* a given sliced color consumed.
 ## Consumption / accounting
 
 If you care about how much of *each* filament a multi-color job used:
+
 - **Rich feeders** report remaining grams/% on the wire — diff it.
 - **Sparse / state-blind feeders** report nothing usable → read the **sliced file** (`; filament used [mm]/[g]` per
   filament + the `T<n>` map), joined to the slot map above. See

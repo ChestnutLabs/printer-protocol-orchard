@@ -48,6 +48,7 @@ backlog so an old launch can't replay). 🟡 Bench idle streams ran ~16–28 fra
 the 60 s window is generous. 🟢
 
 **TLS — two strategies.** The printer presents a self-signed-from-a-Bambu-CA cert (`CN = serial`, no SAN):
+
 - **Verify-off** — `CERT_NONE`, hostname check off, no client cert. Works everywhere; the simplest path.
 - **Proper verification (preferred)** — trust Bambu's published device-CA cert and connect with **SNI = serial**
   (you dial the IP but verify against the serial). On Python 3.13+ clear the strict-X.509 flag (the cert omits a
@@ -247,16 +248,25 @@ slot` (inverse `ams_id = g//4`, `slot = g%4`); **AMS-HT** units are single-tray 
 (`255` = none, `254` = external); a raw `0..3` is ambiguous on multi-AMS/dual-nozzle and must be disambiguated via
 the load-time target you set. 🟢
 
-**Per-slot fields** (each degrades to null): `tray_type` (base material) + `tray_sub_brands` (variant) + `tray_color`
-(**RRGGBBAA** hex — normalize to `RRGGBB` at the boundary; `…00` alpha = clear), `tray_info_idx` (the filament preset
-id — the load-bearing calibration key), `remain` (**percent**, RFID-estimated) × `tray_weight` (g) for grams,
-`k`/`cali_idx` (live flow-K + profile index, `-1` = default), `tag_uid` + `tray_uuid` (RFID identity — the UUID is
-the preferred stable id), recommended nozzle-temp window, and `state` (`9` empty / `10` present-not-fed / `11`
-loaded). 🟢
+**Per-slot fields** (each degrades to null): 🟢
+
+| Field | Meaning |
+|-------|---------|
+| `tray_type` | base material |
+| `tray_sub_brands` | variant |
+| `tray_color` | **RRGGBBAA** hex — normalize to `RRGGBB` at the boundary; `…00` alpha = clear |
+| `tray_info_idx` | the filament preset id — the load-bearing calibration key |
+| `remain` | **percent**, RFID-estimated (× `tray_weight` for grams) |
+| `tray_weight` | grams (g) |
+| `k` / `cali_idx` | live flow-K + profile index, `-1` = default |
+| `tag_uid` / `tray_uuid` | RFID identity — the UUID is the preferred stable id |
+| recommended nozzle-temp window | |
+| `state` | `9` empty / `10` present-not-fed / `11` loaded |
 
 **Variants** — detect by **presence of data, not by model/AMS name** (a third-party AMS clone on the bench reported
 as a full "AMS Pro 2" yet had genuinely no RFID/humidity/dryer hardware, all-zero identity — so gate sub-capabilities
 on real observed values, never on the unit's claimed identity): 🟢
+
 - **Full AMS** (X1/P1/P2): 4 trays, RFID + humidity + drying.
 - **AMS Lite** (A1 / A1 mini): 4 slots, **no RFID/UUID** (module name `n3f`/`n3s`/`ams_f1`; identity falls back to
   user assignment).
@@ -265,6 +275,7 @@ on real observed values, never on the unit's claimed identity): 🟢
 
 **AMS commands** (all `{"print":{…}}`, qos 1, ack-less — watch `ams_status` main-code `1` = filament-change and
 `tray_now` settling): 🟢
+
 - **Load / unload** — `ams_change_filament`. Load passes `-1` temps (firmware picks the temp from the tray preset);
   unload and preset-less external-right loads pass the **real** current nozzle temp (the head must be hot to
   retract). Load auto-unloads whatever is present first.
@@ -275,6 +286,7 @@ on real observed values, never on the unit's claimed identity): 🟢
 - **`ams_get_rfid`** — re-read a tag; valid only when nothing is loaded (`tray_now == 255`).
 
 **Print-time routing — emit two fields together:** 🟢
+
 - **`ams_mapping`** — flat array indexed by 3MF filament slot, carrying global ids, **but external (254/255) and
   unmapped rewritten to `-1`** (sending raw 254/255 here triggers a "failed to get AMS mapping table" fault).
 - **`ams_mapping2`** — the parallel `[{ams_id, slot_id}]` form carrying real external routing; this is the
@@ -291,6 +303,7 @@ Two raw fault channels in the status object: **`hms[]`** (`{attr, code}` objects
 **`print_error`** (`MMMM_EEEE`). Decode each: severity nibble = `(attr >> 8) & 0xF` (1 fatal / 2 serious / 3 common
 / 4 info), module = `(attr >> 24) & 0xFF`, and a `short_code` = `f"{(attr>>16)&0xFFFF:04X}_{code&0xFFFF:04X}"` for
 lookup. Two **filters are essential** or the UI lights up during a normal print: 🟡
+
 1. **Status-not-fault:** skip if the low half `< 0x4000` (firmware emits low values as normal-phase status).
 2. **User-action echoes:** skip a small hand-maintained set of short codes the firmware emits during normal
    user-cancel sequences.
