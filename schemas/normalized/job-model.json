@@ -1,0 +1,46 @@
+{
+  "_meta": {
+    "schema_kind": "normalized-model",
+    "title": "Neutral job / timing model — normalized units and progress",
+    "scope": "cross-vendor (neutral target, not a wire format)",
+    "confidence": "neutral model — a synthesis, not a wire fact; the per-vendor timing facts carry the confidence",
+    "derived_from": {
+      "doc": "../../MODEL.md",
+      "section": "3. Job & timing model",
+      "source_note": "Synthesis of ../../patterns/timing-normalization.md. Per-vendor field names and progress kind live in each protocols/<vendor>.md."
+    },
+    "facts_only": true,
+    "sanitized": true,
+    "notes": [
+      "Convert every time value to integer seconds AT THE ADAPTER EDGE; nothing downstream re-multiplies by 60 or 3600.",
+      "A naive elapsed/progress ETA is systematically wrong near the end for the file-byte progress kind."
+    ]
+  },
+
+  "units": {
+    "time": { "unit": "seconds", "type": "integer", "note": "vendors send minutes / seconds / milliseconds — convert once at the edge" },
+    "filament": { "unit": "grams", "note": "derive from remaining_pct x slot weight where only a % is exposed" },
+    "progress": { "type": "number", "range": [0.0, 1.0], "note": "a fraction, not a percent" }
+  },
+
+  "progress_kind": {
+    "field": "progress_kind",
+    "values": ["time-based", "file-byte"],
+    "note": "REQUIRED to compute a correct ETA. time-based: Anycubic, Bambu, PrusaLink, Elegoo SDCP. file-byte: most Klipper/Moonraker-descended and object-model stacks (Klipper, Creality, Duet, OctoPrint, Snapmaker) + Marlin (M27 byte position)."
+  },
+
+  "remaining_time_precedence": [
+    { "rank": 1, "source": "firmware-reported time-remaining", "note": "best — already reflects live speed/pauses" },
+    { "rank": 2, "source": "estimate - elapsed", "note": "when the file metadata carries a total estimate" },
+    { "rank": 3, "source": "time-based extrapolation elapsed/progress - elapsed", "note": "ONLY with time-based progress; NEVER with file-byte progress" }
+  ],
+
+  "job_fields": [
+    { "field": "state",         "type": "neutral lifecycle", "ref": "./lifecycle-state.json" },
+    { "field": "progress",      "type": "number 0.0-1.0" },
+    { "field": "progress_kind", "type": "time-based | file-byte" },
+    { "field": "elapsed_s",     "type": "integer|null", "unit": "seconds" },
+    { "field": "remaining_s",   "type": "integer|null", "unit": "seconds" },
+    { "field": "filament_g",    "type": "number|null", "unit": "grams" }
+  ]
+}

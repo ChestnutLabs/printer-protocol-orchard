@@ -1,0 +1,38 @@
+{
+  "_meta": {
+    "schema_kind": "state-enum",
+    "title": "Creality (stock OS) — native print state → normalized lifecycle",
+    "vendor": "creality",
+    "family": "Creality OS (stock: K1/K2/Ender-3 V3 …)",
+    "confidence": "🟡 source-read (grouping); ⚪ inferred for the fine 6/7/8 labels",
+    "derived_from": {
+      "paper": "../../protocols/creality.md",
+      "section": "Reading state — the `state` int table",
+      "source_note": "Clean-room from Creality's own committed device-manager frontend inside their OrcaSlicer fork. No code copied; no secrets. No stock device bench-validated in this orchard."
+    },
+    "validated_on": [],
+    "facts_only": true,
+    "sanitized": true,
+    "notes": [
+      "`state` is an int on the flat pushed field-bag. Do NOT conflate it with `deviceState`, a separate online/health int (`-1` offline / `0` online-idle / `1` busy).",
+      "Fine labels for `6`/`7`/`8` are low-confidence (⚪) — a live idle→print→pause→complete→fail capture on a stock K1/KE would close them.",
+      "Write-safety should derive from the COMPOSITE read (`printFileName` + `printProgress` + `err.errcode` + `selfTestStep`) plus the busy set `{1,5,6,7,8}`, never from `state` alone. The frontend treats `{1,5,8}` as print-in-progress and `{5,6}` as paused."
+    ]
+  },
+
+  "field": "state",
+  "unknown_maps_to": "unknown",
+  "normalized_values": ["standby", "printing", "paused", "cancelled", "complete", "busy", "error", "unknown"],
+
+  "mappings": [
+    { "native": 0, "normalized": "standby",   "note": "idle / processing" },
+    { "native": 1, "normalized": "printing" },
+    { "native": 2, "normalized": "complete" },
+    { "native": 3, "normalized": "error",     "note": "failed" },
+    { "native": 4, "normalized": "cancelled", "note": "abort / stopped" },
+    { "native": 5, "normalized": "paused" },
+    { "native": 6, "normalized": "paused",    "confidence": "⚪", "note": "paused-side per the write-gate `{5,6}`; fine label unconfirmed" },
+    { "native": 7, "normalized": "busy",      "confidence": "⚪", "note": "busy (stopping / homing?); fine label unconfirmed" },
+    { "native": 8, "normalized": "printing",  "confidence": "⚪", "note": "printing-side per the write-gate `{1,5,8}` (recovery?); fine label unconfirmed" }
+  ]
+}

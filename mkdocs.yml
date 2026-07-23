@@ -34,6 +34,7 @@ exclude_docs: |
   examples/
   fixtures/
   schemas/
+  data/
   includes/
   overrides/
   # ^ overrides/ is the theme custom_dir (home.html + assets/), copied via Material's
@@ -125,6 +126,7 @@ extra_css:
 
 nav:
   - Home: index.md
+  - Quickstart: QUICKSTART.md
   - Coverage: COVERAGE.md
   - Comparison: COMPARISON.md
   - Protocols:
@@ -147,10 +149,13 @@ nav:
       - Discovery & credentials: patterns/discovery-and-credentials.md
       - Multi-material feeders: patterns/multi-material-feeders.md
       - Timing normalization: patterns/timing-normalization.md
+      - Faults & errors: patterns/faults-and-errors.md
   - Reference:
+      - Neutral model: MODEL.md
       - Method: METHOD.md
       - Glossary: GLOSSARY.md
       - Confidence grading: CONFIDENCE.md
+      - Security model: SECURITY-MODEL.md
       - Licensing: LICENSING.md
       - Disclaimer: DISCLAIMER.md
   - Contributing:

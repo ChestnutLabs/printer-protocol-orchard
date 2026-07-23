@@ -1,0 +1,53 @@
+{
+  "_meta": {
+    "schema_kind": "normalized-model",
+    "title": "Neutral feeder / slot model — the shape every multi-material unit folds into",
+    "scope": "cross-vendor (neutral target, not a wire format)",
+    "confidence": "neutral model — a synthesis, not a wire fact; the per-vendor feeder facts carry the confidence",
+    "derived_from": {
+      "doc": "../../MODEL.md",
+      "section": "2. Feeder / slot model",
+      "source_note": "Synthesis of ../../patterns/multi-material-feeders.md. Per-vendor feeder facts (fields exposed, richness) live in each protocols/<vendor>.md."
+    },
+    "facts_only": true,
+    "sanitized": true,
+    "notes": [
+      "Everything beyond the per-slot atom (remaining %, RFID uuid, dry-box) is optional and degrades — vendors disagree on what they expose.",
+      "Never reconcile vendor slot arithmetic to a shared index; keep `slot_key` opaque per adapter."
+    ]
+  },
+
+  "invariants": [
+    "An opaque per-slot atom (all fields optional, degrade to null).",
+    "Capability classes keyed on presence, never a vendor name.",
+    "An opaque, adapter-owned slot_key (do not reconcile vendor global-slot arithmetic)."
+  ],
+
+  "slot_atom": {
+    "material": { "type": "string|null", "note": "base material, e.g. PLA/PETG" },
+    "color":    { "type": "string|null", "format": "RRGGBB (uppercase hex)", "note": "normalize at the boundary from RGB tuples / RRGGBBAA / #RRGGBB / 0.0-1.0 floats" },
+    "vendor":   { "type": "string|null" },
+    "sku":      { "type": "string|null" },
+    "source":   { "type": "string|null", "note": "provenance of the slot data (wire | RFID | user-assigned)" }
+  },
+
+  "optional_slot_fields": [
+    { "field": "remaining_pct", "type": "number|null", "note": "0-100; RFID- or sensor-estimated where present" },
+    { "field": "remaining_g",   "type": "number|null", "note": "grams; derive from remaining_pct x slot weight where only a % is exposed" },
+    { "field": "rfid_uuid",     "type": "string|null" },
+    { "field": "drybox",        "type": "object|null", "note": "temp/humidity telemetry where present" }
+  ],
+
+  "capability_classes": [
+    { "class": "mmu",          "shape": "bank of slots -> one hotend", "examples_neutral": "AMS-class / DIY MMU" },
+    { "class": "external",     "shape": "a single external spool" },
+    { "class": "toolchanger",  "shape": "multiple physical toolheads that dock", "note": "orthogonal to a feeder — N hotends, not N slots -> 1 hotend" }
+  ],
+
+  "slot_key": { "type": "opaque string", "note": "adapter-minted; never cross-compare between vendors" },
+
+  "assignment": {
+    "field": "slot_map",
+    "note": "print-time color->slot / filament->tool assignment; the key to per-material accounting. Vendors name it ams_mapping / ams_mapping2 / slot_map / ams_box_mapping / extruder_map_table."
+  }
+}

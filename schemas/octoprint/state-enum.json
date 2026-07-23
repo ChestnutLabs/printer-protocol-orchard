@@ -1,0 +1,45 @@
+{
+  "_meta": {
+    "schema_kind": "state-enum",
+    "title": "OctoPrint — native state flags → normalized lifecycle",
+    "vendor": "octoprint",
+    "family": "OctoPrint host controller (fronts a USB/serial printer)",
+    "confidence": "🟡 source-read for the 9 documented flags; ⚪ for the two source-only flags and the composite precedence",
+    "derived_from": {
+      "paper": "../../protocols/octoprint.md",
+      "section": "Reading state — parse `state.flags`, never `state.text`",
+      "source_note": "Clean-room from OctoPrint's official API docs + AGPL server source. No code copied. Validatable hardware-free via the official Docker image + bundled Virtual Printer. Target 1.11.x (floor 1.11.8)."
+    },
+    "validated_on": [],
+    "facts_only": true,
+    "sanitized": true,
+    "notes": [
+      "Parse the `state.flags` BOOLEANS, never the human `state.text`. The same object arrives in the REST poll (`GET /api/printer` → `state:{text,flags,error?}`) and the SockJS `current`/`history` pushes.",
+      "`Operational` is ambiguous: it is both 'idle/ready' AND the base state under which the printing/paused flags ride — read `printing`/`paused`/`pausing`/`cancelling` BEFORE concluding standby.",
+      "The server emits 11 flags; only 9 are documented here — `resuming` and `finishing` are source-only (⚪, confirm on a live instance). Prefer them when present, else derive from the state string.",
+      "`GET /api/printer` returns `409` when the printer is not operational — a valid 'not connected' signal, not a transport failure.",
+      "`sdReady` / `ready` / `closedOrError` are link/SD flags, not lifecycle-print states. There is no explicit 'complete' flag; completion is inferred from `finishing` + job progress."
+    ]
+  },
+
+  "field": "state.flags",
+  "field_kind": "boolean-flags",
+  "unknown_maps_to": "unknown",
+  "normalized_values": ["offline", "connecting", "standby", "printing", "paused", "cancelled", "error", "unknown"],
+
+  "mappings": [
+    { "native": "closedOrError (and not error)", "normalized": "offline" },
+    { "native": "operational (and not printing and not paused)", "normalized": "standby", "note": "the ambiguous base 'Operational' — read the print flags first" },
+    { "native": "printing", "normalized": "printing" },
+    { "native": "resuming", "normalized": "printing", "confidence": "⚪", "note": "source-only flag; text `Resuming` is the fallback tell" },
+    { "native": "finishing", "normalized": "printing", "confidence": "⚪", "note": "source-only flag; a finishing hint, not a distinct 'complete' flag" },
+    { "native": "pausing", "normalized": "paused", "note": "transient; OctoPrint keeps a distinct `pausing`" },
+    { "native": "paused", "normalized": "paused" },
+    { "native": "cancelling", "normalized": "cancelled", "note": "transient; OctoPrint keeps a distinct `cancelling`" },
+    { "native": "error / (closedOrError and error)", "normalized": "error" }
+  ],
+
+  "text_derived": [
+    { "native_text": ["Opening…", "Detecting…", "Connecting"], "normalized": "connecting", "note": "string-derived transient; no dedicated flag" }
+  ]
+}

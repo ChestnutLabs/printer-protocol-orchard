@@ -1,0 +1,40 @@
+{
+  "_meta": {
+    "schema_kind": "state-enum",
+    "title": "PrusaLink — native printer.state → normalized lifecycle",
+    "vendor": "prusalink",
+    "family": "PrusaLink on Buddy (MK4/MK4S/MK3.9, MINI/MINI+, XL, Core One) + RPi Prusa-Link (MK3S+); SL1/SL1S",
+    "confidence": "🟡 source-read (from Prusa's own published OpenAPI 3.0.1 spec); hardware-unvalidated / partial",
+    "derived_from": {
+      "paper": "../../protocols/prusalink.md",
+      "section": "Reading state — `printer.state` enum",
+      "source_note": "Clean-room from the vendor's own published OpenAPI 3.0.1 spec (prusa3d/Prusa-Link-Web). No code copied; no secrets."
+    },
+    "validated_on": [],
+    "facts_only": true,
+    "sanitized": true,
+    "notes": [
+      "`printer.state` comes from `GET /api/v1/status` (the `printer` block is the one required field). A job-level subset also appears as `job.state` (PRINTING/PAUSED/FINISHED/STOPPED/ERROR) from `GET /api/v1/job`.",
+      "`READY` and `ATTENTION` are near-unique states with no crisp cross-brand analogue. `READY` is distinct from `IDLE` only on Buddy firmware — collapse it to standby but keep a `ready` hint.",
+      "Map `ATTENTION` to a NEEDS-USER signal, not silently to plain `error`: the printer is waiting on a human (filament runout, MMU error, 'remove print' dialog). Its exact triggers are an open gap.",
+      "`BUSY` is a mid-operation transient (homing, loading) — treat as busy for write-gating; it is not acceptable for a new job.",
+      "Progress here is TIME-based (unlike file-byte on Klipper/OctoPrint); times are in seconds."
+    ]
+  },
+
+  "field": "printer.state",
+  "unknown_maps_to": "unknown",
+  "normalized_values": ["standby", "busy", "printing", "paused", "cancelled", "complete", "error", "unknown"],
+
+  "mappings": [
+    { "native": "IDLE", "normalized": "standby", "note": "no job" },
+    { "native": "READY", "normalized": "standby", "note": "keep a `ready` hint; distinct from IDLE only on Buddy firmware" },
+    { "native": "BUSY", "normalized": "busy", "note": "mid-operation (homing/loading); not acceptable for a new job" },
+    { "native": "PRINTING", "normalized": "printing" },
+    { "native": "PAUSED", "normalized": "paused" },
+    { "native": "FINISHED", "normalized": "complete" },
+    { "native": "STOPPED", "normalized": "cancelled", "note": "user/host stopped" },
+    { "native": "ERROR", "normalized": "error", "note": "carries `status_printer.message` + error `code`" },
+    { "native": "ATTENTION", "normalized": "error", "sub_state": "needs-user", "note": "waiting on a human — surface as needs-user, NOT plain error" }
+  ]
+}

@@ -14,6 +14,9 @@ Confidence tags: 🟢 hardware-validated · 🟡 source-read · 🔵 community/R
 carry hardware validation; every other family is 🟡 source-read (wire-shape from the vendor's own slicer/SDK/docs, not
 yet confirmed on a bench). Trust the **per-paper** tags on individual facts over this summary column.
 
+> **Machine-readable:** a structured mirror of this matrix — per-family transport/ports/auth/model/progress/feeder/confidence
+> plus the fingerprint routing — lives at [`data/comparison.json`](data/comparison.json), regenerated from this page.
+
 ## Main matrix
 
 | Family | Paradigm | Transport (proto:port) | Discovery | Auth / credential | Push vs Poll | Progress semantics | Multi-material | Conf. |

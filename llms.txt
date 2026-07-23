@@ -4,6 +4,11 @@
 
 Every fact carries a confidence tag — 🟢 hardware-validated, 🟡 source-read (from the vendor's own open-source slicer/SDK), 🔵 community/RE, ⚪ inferred. See [CONFIDENCE.md](CONFIDENCE.md). Read `protocols/<vendor>.md` for a family; each opens with an "At a glance" one-page summary. Two operating rules recur across families: **`upload != launch`** (file transfer and print-start are separate operations, often on separate channels) and **almost no family returns a synchronous "print started" ack** — you confirm by watching the status stream transition.
 
+## Start here
+
+- [Quickstart](QUICKSTART.md): build your first LAN client end-to-end — fingerprint → connect → read → launch → confirm.
+- [Neutral model](MODEL.md): the canonical shape every adapter maps *into* — normalized lifecycle state, feeder/slot model, and job/timing model. The center of gravity of the whole orchard.
+
 ## Protocols (one paper per printer family)
 
 - [Anycubic (Kobra family)](protocols/anycubic.md): per-printer MQTT over TLS `:9883` (client presents a slicer cert; printer server cert not verified) + plain-HTTP `:18910` for identity/file upload; `avata` and `gkapi` dialects share one command set. 🟢 hardware-validated.
@@ -25,12 +30,15 @@ Every fact carries a confidence tag — 🟢 hardware-validated, 🟡 source-rea
 - [Discovery, LAN mode & credentials](patterns/discovery-and-credentials.md): the small number of onboarding shapes — "cloud off → local access, authenticated by a per-device code."
 - [Multi-material feeders](patterns/multi-material-feeders.md): collapse every vendor AMS/MMU/combiner into one neutral model — an opaque per-slot atom, capability classes keyed on presence not vendor name.
 - [Time & consumption normalization](patterns/timing-normalization.md): convert every time to integer seconds and filament to grams at the adapter edge, so an 11-minute print never shows as 112 hours.
+- [Faults, errors & recovery](patterns/faults-and-errors.md): where each family carries faults, the "looks-like-a-fault-but-isn't" filters, structured emergency-stop, and a neutral fault surface — a failed job can read as plain idle.
 
 ## Landscape & machine-readable
 
 - [Comparison matrix](COMPARISON.md): the whole cross-vendor landscape in one table.
+- [Comparison data](data/comparison.json): the matrix as structured JSON — per-family transport/ports/auth/model/progress/feeder/confidence + the fingerprint routing.
 - [Coverage map](COVERAGE.md): which vendors use which paradigm, documented vs still open.
 - [Schemas](schemas/README.md): machine-readable message/topic/state schemas (JSON Schema) for codegen + validation.
+- [Neutral-model schemas](schemas/normalized/lifecycle-state.json): the canonical target as data — plus `feeder-model.json` and `job-model.json`; see [MODEL.md](MODEL.md).
 - [Fixtures](fixtures/README.md): sanitized real wire captures, so a paper is a testable spec (IPs → TEST-NET, ids/credentials redacted).
 - [Glossary](GLOSSARY.md): shared vocabulary (MMU vs toolchanger vs IDEX, feeder classes, poll-synth, …).
 - [Example clients](examples/README.md): minimal reference clients, one per protocol paradigm.
@@ -40,6 +48,7 @@ Every fact carries a confidence tag — 🟢 hardware-validated, 🟡 source-rea
 - [Research method](METHOD.md): how to document a printer not yet covered — mine the vendor's own open-source slicer fork for the first-party client.
 - [Confidence grading](CONFIDENCE.md): what each 🟢/🟡/🔵/⚪ tag means and how much to trust it.
 - [Agent guide](AGENTS.md): orientation for AI coding agents working *in* this repo (clean-room rules, validation gates).
+- [Security model](SECURITY-MODEL.md): the integrator threat model — LAN-trust, TLS verify-off, credential handling, write-gating, network posture.
 
 ## Optional
 

@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-07-23
+
+Resource depth + a designed docs site.
+
+### Added
+
+- **Neutral model** (`MODEL.md`) + machine-readable schemas (`schemas/normalized/` —
+  lifecycle-state, feeder-model, job-model): the canonical state / feeder / job-timing
+  shape every adapter maps *into*, reconciling the per-vendor mappings.
+- **Faults, errors & recovery pattern** (`patterns/faults-and-errors.md`) — cross-vendor
+  fault channels, "looks-like-a-fault-but-isn't" filters, structured emergency-stop.
+- **State-enum schemas** for Creality, OctoPrint, PrusaLink, and Snapmaker (FlashForge and
+  Marlin intentionally omitted — no faithfully-extractable native enum).
+- **Machine-readable comparison matrix** (`data/comparison.json`).
+- **Quickstart** (`QUICKSTART.md`) and **integrator security model** (`SECURITY-MODEL.md`).
+- **`llms.txt`** index and **`AGENTS.md`** guide for AI consumers and coding agents.
+- **Orchard theme** for the docs site (a custom Material for MkDocs theme), plus README badges.
+
+### Changed
+
+- **MkDocs rendering pass** — repaired tables and lists that python-markdown flattened to
+  paragraphs, made heading anchors GitHub-compatible, and de-densified two dense mappings
+  into tables (no technical content changed).
+- CI actions bumped to the Node 24 runtime.
+
 ## [0.1.0] - 2026-07-22
 
 First public cut of the Orchard.
@@ -36,5 +61,6 @@ First public cut of the Orchard.
   and sanitization rules on every change.
 - **Documentation site** presenting the papers, patterns, and maps.
 
-[Unreleased]: https://github.com/ChestnutLabs/printer-protocol-orchard/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/ChestnutLabs/printer-protocol-orchard/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/ChestnutLabs/printer-protocol-orchard/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/ChestnutLabs/printer-protocol-orchard/releases/tag/v0.1.0

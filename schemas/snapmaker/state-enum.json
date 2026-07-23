@@ -1,0 +1,36 @@
+{
+  "_meta": {
+    "schema_kind": "state-enum",
+    "title": "Snapmaker U1 — native print state → normalized lifecycle (inherited Moonraker)",
+    "vendor": "snapmaker",
+    "family": "Snapmaker U1 (Klipper + Moonraker behind a Snapmaker auth/pairing wrapper)",
+    "confidence": "🟡 source-read, hardware-UNVALIDATED",
+    "derived_from": {
+      "paper": "../../protocols/snapmaker.md",
+      "section": "Reading state (inherits Moonraker `print_stats.state`)",
+      "source_note": "Clean-room from the vendor's own Flutter control-app string constants. No code copied; no secrets. No field confirmed against a real U1. Base object shapes: see ../klipper/state-enum.json."
+    },
+    "validated_on": [],
+    "facts_only": true,
+    "sanitized": true,
+    "notes": [
+      "Snapmaker did NOT fork the protocol — `print_stats.state` is stock Moonraker (identical to ../klipper/state-enum.json). The U1 adds material/tool state under `custom.*`, but lifecycle state is unchanged.",
+      "Progress is file-byte (`virtual_sdcard.progress`), not time; times are in seconds (no ×60).",
+      "Auth boundary unconfirmed — whether Moonraker answers directly on LAN or only behind the `:8100` auth gate (which may require injecting the session token into every call).",
+      "It is a true toolchanger, not a feeder — orthogonal to the state enum."
+    ]
+  },
+
+  "field": "print_stats.state",
+  "unknown_maps_to": "unknown",
+  "normalized_values": ["standby", "printing", "paused", "complete", "cancelled", "error", "unknown"],
+
+  "mappings": [
+    { "native": "standby",   "normalized": "standby" },
+    { "native": "printing",  "normalized": "printing" },
+    { "native": "paused",    "normalized": "paused" },
+    { "native": "complete",  "normalized": "complete" },
+    { "native": "cancelled", "normalized": "cancelled" },
+    { "native": "error",     "normalized": "error" }
+  ]
+}

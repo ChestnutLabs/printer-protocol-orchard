@@ -1,0 +1,169 @@
+{
+  "_meta": {
+    "schema_kind": "comparison-matrix",
+    "title": "The Printer Protocol Orchard — cross-vendor comparison matrix (machine-readable)",
+    "derived_from": {
+      "doc": "../COMPARISON.md",
+      "source_note": "A structured mirror of COMPARISON.md. That prose matrix is a distilled cross-index of the per-family papers; when a cell and a paper disagree, THE PAPER WINS. Regenerate this file from COMPARISON.md, not the reverse."
+    },
+    "confidence_legend": {
+      "hardware-validated": "🟢 confirmed against a real device",
+      "source-read": "🟡 read from the vendor's own published slicer/SDK; wire-shape correct, not yet HW-confirmed",
+      "community": "🔵 third-party reverse-engineering; corroborate before trusting"
+    },
+    "note": "`—` means the paper documents no such facet (not 'unknown'). Per-family confidence is a one-glyph summary; individual facts inside each paper carry their own tags, which are authoritative.",
+    "facts_only": true,
+    "sanitized": true
+  },
+
+  "families": [
+    {
+      "id": "anycubic", "name": "Anycubic", "paper": "../protocols/anycubic.md",
+      "paradigm": "Proprietary LAN",
+      "transport": "MQTT/TLS :9883 + HTTP :18910 (identity/upload)",
+      "ports": [9883, 18910], "transports": ["mqtt-tls", "http"],
+      "discovery": "manual IP; GET :18910/info (sleeping → HTTP-silent)",
+      "auth": "slicer mTLS client cert + MQTT creds derived from /info",
+      "model": "poll-hybrid (idle pushes nothing ~48 s; active auto-pushes)",
+      "progress": "% + reported times",
+      "multi_material": "ACE per-slot (multiColorBox) + external spool",
+      "confidence": "🟢", "confidence_primary": "hardware-validated"
+    },
+    {
+      "id": "bambu", "name": "Bambu", "paper": "../protocols/bambu.md",
+      "paradigm": "Proprietary LAN",
+      "transport": "MQTT/TLS :8883 + implicit FTPS :990",
+      "ports": [8883, 990], "transports": ["mqtt-tls", "ftps"],
+      "discovery": "SSDP :2021; manual IP",
+      "auth": "user bblp, password = access code off the printer screen",
+      "model": "push (pushall snapshot → live deltas); no command ack",
+      "progress": "% + time",
+      "multi_material": "AMS (full/Lite/high-temp) per-slot + external",
+      "confidence": "🟢/🟡", "confidence_primary": "hardware-validated"
+    },
+    {
+      "id": "creality", "name": "Creality (stock OS)", "paper": "../protocols/creality.md",
+      "paradigm": "Proprietary LAN",
+      "transport": "plain WS ws://:9999 + HTTP :80/upload",
+      "ports": [9999, 80], "transports": ["websocket", "http"],
+      "discovery": "manual IP; vendor UDP broadcast; GET /info",
+      "auth": "none on LAN socket (LAN-trust)",
+      "model": "push-hybrid (unsolicited state merged; get poll backstop)",
+      "progress": "% — treat as file-byte (Klipper under the hood)",
+      "multi_material": "CFS per-slot, rich (per-slot % + RFID + dry-box)",
+      "confidence": "🟡", "confidence_primary": "source-read"
+    },
+    {
+      "id": "elegoo", "name": "Elegoo", "paper": "../protocols/elegoo.md",
+      "paradigm": "Mixed (3 stacks)",
+      "transport": "Moonraker :7125 / SDCP WS :3030 / MQTT :1883 + HTTP :80",
+      "ports": [7125, 3030, 1883, 80], "transports": ["http", "websocket", "mqtt"],
+      "discovery": "manual; SSDP·mDNS / UDP :3000 / UDP :52700",
+      "auth": "none / none (LAN-trust) / access code (CC2)",
+      "model": "subscribe / passive push + poll floor / push + 1002 poll",
+      "progress": "see paper (per-backend)",
+      "multi_material": "CANVAS 4-slot (material/color/temp; no qty, no RFID UID)",
+      "confidence": "🟡/🔵", "confidence_primary": "source-read"
+    },
+    {
+      "id": "klipper-moonraker", "name": "Klipper / Moonraker", "paper": "../protocols/klipper-moonraker.md",
+      "paradigm": "Moonraker",
+      "transport": "HTTP + WS JSON-RPC :7125",
+      "ports": [7125], "transports": ["http", "websocket"],
+      "discovery": "manual IP baseline; optional mDNS _moonraker._tcp / SSDP",
+      "auth": "often none (trusted_clients); else API key (X-Api-Key) / JWT",
+      "model": "subscribe (WS): full snapshot → sparse deltas; or one-shot query",
+      "progress": "file-byte position (not time)",
+      "multi_material": "none native — a software provider (Happy Hare / AFC) layers it",
+      "confidence": "🟡", "confidence_primary": "source-read"
+    },
+    {
+      "id": "snapmaker", "name": "Snapmaker U1", "paper": "../protocols/snapmaker.md",
+      "paradigm": "Moonraker + wrapper",
+      "transport": "Moonraker :7125 + HTTP :8100/api (pair/orchestrate)",
+      "ports": [7125, 8100], "transports": ["http", "websocket"],
+      "discovery": "manual IP; fingerprint by probing :8100/api",
+      "auth": "pairing: authCode (presence) + accessCode (session); link_mode lan/wan",
+      "model": "subscribe (WS) + poll fallback",
+      "progress": "file-byte; time in seconds",
+      "multi_material": "toolchanger (filament→tool map), not a feeder",
+      "confidence": "🟡", "confidence_primary": "source-read"
+    },
+    {
+      "id": "duet", "name": "Duet3D / RRF", "paper": "../protocols/duet.md",
+      "paradigm": "Object-model",
+      "transport": "HTTP :80 — standalone rr_* or SBC/DSF /machine/* REST + 1 WS",
+      "ports": [80], "transports": ["http", "websocket"],
+      "discovery": "manual host/IP; <name>.local mDNS/NetBIOS where honoured",
+      "auth": "machine password → session → X-Session-Key header",
+      "model": "standalone poll-only (no push); SBC push (full-model → patch)",
+      "progress": "file-byte fraction (state value is processing)",
+      "multi_material": "none (no MMU model) — toolchanger tools[] array",
+      "confidence": "🟡", "confidence_primary": "source-read"
+    },
+    {
+      "id": "octoprint", "name": "OctoPrint", "paper": "../protocols/octoprint.md",
+      "paradigm": "Host controller",
+      "transport": "HTTP REST /api/* :5000 + SockJS /sockjs",
+      "ports": [5000], "transports": ["http", "sockjs"],
+      "discovery": "mDNS _octoprint._tcp; manual IP/URL",
+      "auth": "one API key (X-Api-Key / Bearer); Application-Keys handshake",
+      "model": "push-primary (SockJS current/history) + REST poll backstop",
+      "progress": "fraction 0.0–1.0, file-byte (not time)",
+      "multi_material": "none in core — exposes multi-tool; feeders are plugins",
+      "confidence": "🟡", "confidence_primary": "source-read"
+    },
+    {
+      "id": "prusalink", "name": "PrusaLink", "paper": "../protocols/prusalink.md",
+      "paradigm": "Host controller",
+      "transport": "HTTP :80 only — no push channel",
+      "ports": [80], "transports": ["http"],
+      "discovery": "manual IP; mDNS advertised (service type unconfirmed); GET /api/v1/info",
+      "auth": "HTTP Digest (user maker); legacy X-Api-Key tier (off by default)",
+      "model": "poll-only (GET /api/v1/status)",
+      "progress": "job.progress time-based; seconds",
+      "multi_material": "presence only (info.mmu bare boolean)",
+      "confidence": "🟡", "confidence_primary": "source-read"
+    },
+    {
+      "id": "flashforge", "name": "FlashForge", "paper": "../protocols/flashforge.md",
+      "paradigm": "Proprietary LAN",
+      "transport": "newer: pub/sub SDK (closed DLL, MQTT-shaped) / legacy: raw-TCP G-code :8899",
+      "ports": [8899], "transports": ["mqtt-shaped", "raw-tcp"],
+      "discovery": "newer: UDP broadcast (per-device port); legacy: manual IP → :8899",
+      "auth": "newer: per-device checkCode (screen); legacy: ~M601 handshake, no code",
+      "model": "newer: subscribe + query; legacy: poll (~M119/~M105/~M27)",
+      "progress": "see paper (Klipper inside newer; SD-byte on legacy)",
+      "multi_material": "Material Station 4-spool (AD5X, newer path only)",
+      "confidence": "🟡", "confidence_primary": "source-read"
+    },
+    {
+      "id": "marlin-serial", "name": "Marlin (USB serial)", "paper": "../protocols/marlin-serial.md",
+      "paradigm": "USB serial",
+      "transport": "USB-CDC virtual serial (COMx / ttyUSB* / ttyACM*); baud autodetect",
+      "ports": [], "transports": ["usb-serial"],
+      "discovery": "none (OS port enum + M115 probe); VID/PID = UART chip, not printer",
+      "auth": "none — physical access is the authorization",
+      "model": "poll-only (M105/M114/M27; M155 opt-in auto-report)",
+      "progress": "synthesized from M27 SD byte position (host-stream: line count)",
+      "multi_material": "none queryable (T<n> lives in the sliced file)",
+      "confidence": "🟡", "confidence_primary": "source-read"
+    }
+  ],
+
+  "fingerprint": [
+    { "observe": "Port :7125 answering JSON-RPC 2.0; printer.objects.list works", "likely": "generic Moonraker / Klipper (or a vendor fork)", "paper": "../protocols/klipper-moonraker.md" },
+    { "observe": "A Moonraker host that ALSO answers :8100/api", "likely": "Snapmaker U1 (Moonraker behind a pairing wrapper)", "paper": "../protocols/snapmaker.md" },
+    { "observe": "MQTT on :8883 wanting user bblp + an access code; SSDP on :2021", "likely": "Bambu Lab", "paper": "../protocols/bambu.md" },
+    { "observe": "MQTT on :9883 needing a slicer mTLS cert; GET :18910/info returns identity", "likely": "Anycubic (Kobra)", "paper": "../protocols/anycubic.md" },
+    { "observe": "A plain ws://:9999 carrying flat {method,params}, no auth; :80/upload", "likely": "Creality stock OS", "paper": "../protocols/creality.md" },
+    { "observe": "JSON-over-WebSocket on :3030 with topic strings; UDP discovery on :3000", "likely": "Elegoo SDCP (Centauri Carbon 1)", "paper": "../protocols/elegoo.md" },
+    { "observe": "A printer running its own MQTT broker on :1883 + :80 upload + access code", "likely": "Elegoo CC2", "paper": "../protocols/elegoo.md" },
+    { "observe": "GET /rr_model (or /rr_connect) returns JSON; X-Session-Key after login", "likely": "Duet / RepRapFirmware (standalone)", "paper": "../protocols/duet.md" },
+    { "observe": "A /machine/* REST API + one WebSocket at /machine", "likely": "Duet / RRF on an SBC (DSF)", "paper": "../protocols/duet.md" },
+    { "observe": "/api/* with an X-Api-Key header + a SockJS /sockjs push channel", "likely": "OctoPrint host", "paper": "../protocols/octoprint.md" },
+    { "observe": "GET /api/v1/status over HTTP Digest (user maker); no push channel", "likely": "PrusaLink host", "paper": "../protocols/prusalink.md" },
+    { "observe": "A device answering ASCII G-code on raw TCP :8899 (or UDP SDK discovery + checkCode)", "likely": "FlashForge (legacy / newer)", "paper": "../protocols/flashforge.md" },
+    { "observe": "A USB serial port that emits a Marlin start banner and answers M115", "likely": "Marlin over USB", "paper": "../protocols/marlin-serial.md" }
+  ]
+}

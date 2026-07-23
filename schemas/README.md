@@ -15,6 +15,11 @@ Each file carries a `_meta` block (kind, confidence, and the paper/section it de
 | **Elegoo SDCP** (CC1) | [`elegoo/sdcp-envelope.json`](elegoo/sdcp-envelope.json), [`sdcp-cmd-catalog.json`](elegoo/sdcp-cmd-catalog.json), [`sdcp-state-enum.json`](elegoo/sdcp-state-enum.json) | envelope + topics · `Cmd`/ack/error catalog · the two status enums (machine + job) |
 | **Duet / RRF** | [`duet/state-status-enum.json`](duet/state-status-enum.json), [`job-and-timing.json`](duet/job-and-timing.json), [`tools-model.json`](duet/tools-model.json), [`gcode-intent-map.json`](duet/gcode-intent-map.json) | state-enum · job/progress/units · `tools[]` toolchanger · intent→GCode map |
 | **Klipper** | [`klipper/state-enum.json`](klipper/state-enum.json) | state-enum |
+| **Creality** | [`creality/state-enum.json`](creality/state-enum.json) | state-enum (int `0`–`8`) |
+| **OctoPrint** | [`octoprint/state-enum.json`](octoprint/state-enum.json) | state-enum (`state.flags` booleans) |
+| **PrusaLink** | [`prusalink/state-enum.json`](prusalink/state-enum.json) | state-enum |
+| **Snapmaker U1** | [`snapmaker/state-enum.json`](snapmaker/state-enum.json) | state-enum (inherited Moonraker) |
+| **Neutral model** | [`normalized/lifecycle-state.json`](normalized/lifecycle-state.json), [`normalized/feeder-model.json`](normalized/feeder-model.json), [`normalized/job-model.json`](normalized/job-model.json) | the canonical target every adapter maps *into* — see [`../MODEL.md`](../MODEL.md) |
 
 ## What can live here
 

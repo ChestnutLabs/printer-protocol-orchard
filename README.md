@@ -1,5 +1,10 @@
 # The Printer Protocol Orchard
 
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Prose: CC BY 4.0](https://img.shields.io/badge/prose-CC%20BY%204.0-lightgrey.svg)](LICENSING.md)
+[![Docs site](https://img.shields.io/badge/docs-orchard-5c8a3f.svg)](https://chestnutlabs.github.io/printer-protocol-orchard/)
+[![CI](https://github.com/ChestnutLabs/printer-protocol-orchard/actions/workflows/ci.yml/badge.svg)](https://github.com/ChestnutLabs/printer-protocol-orchard/actions/workflows/ci.yml)
+
 **Open research and implementation guidance for the LAN control protocols of consumer 3D printers** — so anyone building an
 integration (a slicer plugin, a Home Assistant component, a farm manager, a monitoring dashboard) can skip the
 reverse-engineering and start from documented facts.
@@ -17,6 +22,8 @@ but the orchard itself is **vendor-neutral** — no product, no lock-in, just th
 
 | Path | What it is |
 |------|-----------|
+| [`QUICKSTART.md`](QUICKSTART.md) | **Build your first LAN client end-to-end** — the five-step on-ramp. Start here. |
+| [`MODEL.md`](MODEL.md) | **The neutral model** every adapter maps *into* — normalized state, feeder, and job/timing shapes. |
 | [`protocols/`](protocols/) | **One white paper per printer family** — transport, discovery, auth, read/state, write/control, feeders, quirks. The core reference. |
 | [`patterns/`](patterns/) | **Cross-cutting design wisdom** every adapter-builder needs — timing/units traps, multi-material feeder modeling, discovery + LAN-credential patterns, and the [`connection-flows`](patterns/connection-flows.md) walk-through. The stuff that's the same across vendors. |
 | [`COMPARISON.md`](COMPARISON.md) | **Cross-vendor comparison matrix** — the whole landscape in one table. |

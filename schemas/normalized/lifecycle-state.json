@@ -1,0 +1,43 @@
+{
+  "_meta": {
+    "schema_kind": "normalized-model",
+    "title": "Neutral lifecycle state — the canonical print-state set every adapter maps into",
+    "scope": "cross-vendor (neutral target, not a wire format)",
+    "confidence": "neutral model — a synthesis, not a wire fact; the per-vendor native→neutral mappings carry the confidence",
+    "derived_from": {
+      "doc": "../../MODEL.md",
+      "section": "1. Lifecycle state",
+      "source_note": "Synthesis reconciled from the per-vendor state-enum schemas. Not a protocol any printer speaks; the per-vendor native->neutral mappings are the facts (see each schemas/<vendor>/state-enum.json)."
+    },
+    "facts_only": true,
+    "sanitized": true,
+    "notes": [
+      "Map any unrecognized native value to `unknown`, NEVER to `error`.",
+      "Some papers use `idle` for what this model calls `standby` — they are the same neutral state.",
+      "A finished-and-failed job can read as `standby` on stacks that return to idle on abort — read the fault channels too (see ../../patterns/faults-and-errors.md)."
+    ]
+  },
+
+  "states": [
+    { "value": "offline",     "meaning": "not reachable / link down" },
+    { "value": "connecting",  "meaning": "reachable but not ready — booting, updating, opening the port" },
+    { "value": "standby",     "meaning": "idle and ready, no active job", "aka": ["idle"] },
+    { "value": "preheating",  "meaning": "warming up for/before a job" },
+    { "value": "printing",    "meaning": "actively printing" },
+    { "value": "paused",      "meaning": "job paused" },
+    { "value": "cancelled",   "meaning": "job cancelled / stopped" },
+    { "value": "complete",    "meaning": "job finished successfully" },
+    { "value": "error",       "meaning": "fault / halted / emergency-stopped" },
+    { "value": "busy",        "meaning": "non-print activity — homing, macro, toolchange, mid-operation" },
+    { "value": "unknown",     "meaning": "unmapped value — degrade here, never raise" }
+  ],
+
+  "sub_state_hints": [
+    { "hint": "needs-user", "carry_with": "error", "meaning": "waiting on a human (runout, MMU error, remove-print dialog); surface distinctly, do not flatten to plain error", "seen_on": ["prusalink (ATTENTION)"] },
+    { "hint": "ready",      "carry_with": "standby", "meaning": "a ready state distinct from idle on some firmware", "seen_on": ["prusalink (READY, Buddy)"] },
+    { "hint": "pausing",    "carry_with": "paused",  "meaning": "transient into paused", "seen_on": ["octoprint", "duet"] },
+    { "hint": "cancelling", "carry_with": "cancelled", "meaning": "transient into cancelled", "seen_on": ["octoprint", "duet"] }
+  ],
+
+  "unknown_maps_to": "unknown"
+}
